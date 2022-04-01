@@ -56,9 +56,7 @@ window.addEventListener("load", function(event){
             renderUpdate(); //will be worked on
         }
         else if (game.world.player.getLeft() <= 0) {
-            let v = display.getDisplayWidth() - (game.world.player.width+1);
-            console.log(v);
-            game.world.player.x = v;            
+            game.world.player.x = display.getDisplayWidth() - (game.world.player.width+1);
             //renderUpdate(); //will be worked on
         }
         game.update();
