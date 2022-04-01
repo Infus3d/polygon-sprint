@@ -48,6 +48,7 @@ window.addEventListener("load", function(event){
         }
         if (controller.up.active == true) {
             game.world.player.jump();
+            controller.up.active = false;
         }
 
         if (game.world.player.getRight() >= display.getDisplayWidth()) {
