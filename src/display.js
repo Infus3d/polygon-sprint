@@ -42,5 +42,9 @@ class Display {
         this.buffer.canvas.width = this.context.canvas.width = width;
         this.buffer.canvas.height = this.context.canvas.height = height;
     }
+
+    getDisplayWidth() {
+        return this.buffer.canvas.width;
+    }
 }
 

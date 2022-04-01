@@ -236,6 +236,11 @@ Game.Collider = class {
 
         return col_map;
     }
+
+    setMap(newMap) {
+        //generate new map eventually
+        this.map = newMap;
+    }
 }
 
 //Any object in this world is treated like a rectangle
