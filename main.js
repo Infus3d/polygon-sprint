@@ -32,7 +32,7 @@ window.addEventListener("load", function(event){
     let update = function(){
         if(controller.left.active == true) game.world.player.moveLeft();
         if(controller.right.active == true) game.world.player.moveRight();
-        if(controller.up.active == true) game.world.player.jump();
+        if(controller.up.active == true) game.world.player.jump(), controller.up.active = false;
         game.update();
     };
 
