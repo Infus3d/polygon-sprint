@@ -57,6 +57,11 @@ Game.World = class {
         if(obj.getTop() < 0) { obj.setTop(0); obj.velocity_y = 0; }
         if(obj.getBottom() > this.height) { obj.setBotom(this.height); obj.velocity_y = 0; obj.jumping = false; }
     }
+
+    setMap(newMap) {
+        //generate new map eventually
+        this.map = newMap;
+    }
 }
 
 //Any object in this world is treated like a rectangle
