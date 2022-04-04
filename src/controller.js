@@ -27,3 +27,6 @@ Controller.btnInput = class {
         this.down = isDown;
     }
 }
+
+// Uncomment for testing
+// module.exports.Controller = Controller;

@@ -327,3 +327,6 @@ Game.World.TileSet = class {
         this.tile_size = tile_size;
     }
 }
+
+// Uncomment for testing
+// module.exports.Game = Game;
