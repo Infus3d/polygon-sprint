@@ -11,10 +11,16 @@ window.addEventListener("load", function(event){
             this.backgroundImage = undefined;
         }
 
+        static totalLoadCount = 0;
+
         requestImage(url, callbackFunction){
             let img = new Image();
             img.src = url;
             img.addEventListener("load", function(event){
+                StuffManager.totalLoadCount++;
+                if(StuffManager.totalLoadCount == 2){
+                    runner.start();
+                }
                 callbackFunction(img);
             });
         }
@@ -78,11 +84,9 @@ window.addEventListener("load", function(event){
         stuffManager.tileSheet_tile_size = 70;
         stuffManager.tileSheet_columns = 12;
         stuffManager.tileSheet_spacing = 2;
-
-        stuffManager.requestImage("img/backgroundImage.png", (image) => {
-            stuffManager.backgroundImage = image;
-            runner.start();
-        });
+    });
+    stuffManager.requestImage("img/backgroundImage.png", (image) => {
+        stuffManager.backgroundImage = image;
     });
     window.addEventListener("keydown", keyDownUp);
     window.addEventListener("keyup", keyDownUp);
