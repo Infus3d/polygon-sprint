@@ -24,7 +24,10 @@ class Display {
         };
 
         this.drawObject = function(image, src_x, src_y, src_w, src_h, dest_x, dest_y, dest_w, dest_h){
-            this.buffer.drawImage(image, src_x, src_y, src_w, src_h, dest_x, dest_y, dest_w, dest_h);
+            if(src_x == -1 && src_y == -1)
+                this.buffer.drawImage(image, dest_x, dest_y, dest_w, dest_h);
+            else
+                this.buffer.drawImage(image, src_x, src_y, src_w, src_h, dest_x, dest_y, dest_w, dest_h);
         };
 
         this.drawBackground = function(image){

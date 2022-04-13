@@ -9,16 +9,20 @@ window.addEventListener("load", function(event){
             this.tileSheet_spacing = 2;
 
             this.backgroundImage = undefined;
+            this.playerImages = [];
         }
-
+        
+        //current count of loaded files (images, json files, etc)
         static totalLoadCount = 0;
+        //the threshold the counts need to reach before initiating the game with runner.start()
+        static loadThreshold = 2 + 11 + 11; //1 background, 1 tilesheet, 11 player_right, 11 player_left
 
         requestImage(url, callbackFunction){
             let img = new Image();
             img.src = url;
             img.addEventListener("load", function(event){
                 StuffManager.totalLoadCount++;
-                if(StuffManager.totalLoadCount == 2){
+                if(StuffManager.totalLoadCount == StuffManager.loadThreshold){
                     runner.start();
                 }
                 callbackFunction(img);
@@ -32,6 +36,7 @@ window.addEventListener("load", function(event){
         display.drawMap(stuffManager.tileSheetImage, stuffManager.tileSheet_columns, stuffManager.tileSheet_tile_size, stuffManager.tileSheet_spacing,
              game.world.map, game.world.columns, game.world.tile_set.tile_size);
         display.drawPlayer(game.world.player, game.world.player.color);
+        // display.drawObject(stuffManager.playerImages[0], -1, -1, -1, -1, 300, 200, 50, 67);
         display.render();
     };
 
@@ -88,6 +93,18 @@ window.addEventListener("load", function(event){
     stuffManager.requestImage("img/backgroundImage.png", (image) => {
         stuffManager.backgroundImage = image;
     });
+
+    for(let i=1; i<=11; i++){
+        stuffManager.requestImage("img/player/PNG_right/p1_walk" + (i < 10 ? "0" : "") + i + ".png", (image) => {
+            stuffManager.playerImages.push(image);
+        });
+    }
+    for(let i=1; i<=11; i++){
+        stuffManager.requestImage("img/player/PNG_left/p1_walk" + (i < 10 ? "0" : "") + i + ".png", (image) => {
+            stuffManager.playerImages.push(image);
+        });
+    }
+
     window.addEventListener("keydown", keyDownUp);
     window.addEventListener("keyup", keyDownUp);
 });
