@@ -78,7 +78,7 @@ Game.World = class {
             the right side of the object. Collision_value refers to the value of a collision tile in
             the map under the specified row and column occupied by the object.
          */
-        let collision_value, top, right, bottom, left;
+        let collision_value, top, right, bottom, left, horMid, verMid;
         /**
             testing the top left corner of the object. We get the row and column
             the object occupies in the collision map, then we get the collision_type from the collision map
@@ -107,6 +107,27 @@ Game.World = class {
         right = Math.floor(obj.getRight() / this.tile_set.tile_size);
         collision_value = this.collision_map[bottom * this.columns + right];
         this.collider.routeCollision(collision_value, obj, right * this.tile_set.tile_size, bottom * this.tile_set.tile_size, this.tile_set.tile_size);
+
+
+        top = Math.floor(obj.getTop() / this.tile_set.tile_size);
+        horMid = Math.floor((obj.getLeft() + obj.width * 0.5) / this.tile_set.tile_size);
+        collision_value = this.collision_map[top * this.columns + horMid];
+        this.collider.routeCollision(collision_value, obj, horMid * this.tile_set.tile_size, top * this.tile_set.tile_size, this.tile_set.tile_size);
+
+        bottom = Math.floor(obj.getBottom() / this.tile_set.tile_size);
+        horMid = Math.floor((obj.getLeft() + obj.width * 0.5) / this.tile_set.tile_size);
+        collision_value = this.collision_map[bottom * this.columns + horMid];
+        this.collider.routeCollision(collision_value, obj, horMid * this.tile_set.tile_size, bottom * this.tile_set.tile_size, this.tile_set.tile_size);
+
+        verMid = Math.floor((obj.getTop() + obj.height * 0.5) / this.tile_set.tile_size);
+        left = Math.floor(obj.getLeft() / this.tile_set.tile_size);
+        collision_value = this.collision_map[verMid * this.columns + left];
+        this.collider.routeCollision(collision_value, obj, left * this.tile_set.tile_size, verMid * this.tile_set.tile_size, this.tile_set.tile_size);
+
+        verMid = Math.floor((obj.getTop() + obj.height * 0.5) / this.tile_set.tile_size);
+        right = Math.floor(obj.getRight() / this.tile_set.tile_size);
+        collision_value = this.collision_map[verMid * this.columns + right];
+        this.collider.routeCollision(collision_value, obj, right * this.tile_set.tile_size, verMid * this.tile_set.tile_size, this.tile_set.tile_size);
     }
 }
 
@@ -321,7 +342,7 @@ Game.World.AnimatedObject = class extends Game.World.Object{
         }
     }
 
-    changeFrameSet(frame_set, mode, delay = 10, frame_index = 0){
+    changeFrameSet(frame_set, mode, delay = 7, frame_index = 0){
         if(this.frame_set === frame_set) return;
 
         this.counter = 0;
@@ -337,7 +358,7 @@ Game.World.AnimatedObject = class extends Game.World.Object{
 // update functin is called every time the canvas screen is updated
 Game.World.Player = class extends Game.World.AnimatedObject{
     constructor(x, y){
-        super(Game.World.Player.frame_sets["idle-right"], 10, "loop", x, y, 40, 54, 31);
+        super(Game.World.Player.frame_sets["idle-right"], 7, "loop", x, y, 35, 47, 31);
         this.jumping = true;
         this.color = "#000000";
         this.direction_x = 1;
