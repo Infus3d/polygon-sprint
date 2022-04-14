@@ -337,7 +337,7 @@ Game.World.AnimatedObject = class extends Game.World.Object{
 // update functin is called every time the canvas screen is updated
 Game.World.Player = class extends Game.World.AnimatedObject{
     constructor(x, y){
-        super(Game.World.Player.frame_sets["idle-right"], 10, "loop", x, y, 30, 41, 31);
+        super(Game.World.Player.frame_sets["idle-right"], 10, "loop", x, y, 40, 54, 31);
         this.jumping = true;
         this.color = "#000000";
         this.direction_x = 1;

@@ -33,7 +33,6 @@ window.addEventListener("load", function(event){
         sortPlayerImages(){
             for(let i=1; i<this.playerImages.length; i++){
                 let cur = i;
-                alert(this.playerImages[i].currentSrc);
                 while(cur > 0){
                     let curLen = this.playerImages[cur].currentSrc.length;
                     let prevLen = this.playerImages[cur-1].currentSrc.length;
@@ -57,7 +56,7 @@ window.addEventListener("load", function(event){
         display.drawMap(stuffManager.tileSheetImage, stuffManager.tileSheet_columns, stuffManager.tileSheet_tile_size, stuffManager.tileSheet_spacing,
              game.world.map, game.world.columns, game.world.tile_set.tile_size);
         // display.drawPlayer(game.world.player, game.world.player.color);
-        display.drawObject(stuffManager.playerImages[game.world.player.frame_value], -1, -1, -1, -1, game.world.player.x, game.world.player.y, 30, 41);
+        display.drawObject(stuffManager.playerImages[game.world.player.frame_value], -1, -1, -1, -1, game.world.player.x, game.world.player.y, 40, 54);
         display.render();
     };
 
@@ -68,7 +67,7 @@ window.addEventListener("load", function(event){
         display.drawMap(stuffManager.tileSheetImage, stuffManager.tileSheet_columns, stuffManager.tileSheet_tile_size, stuffManager.tileSheet_spacing,
             game.world.map, game.world.columns, game.world.tile_set.tile_size);
         //display.drawPlayer(game.world.player, game.world.player.color);
-        display.drawObject(stuffManager.playerImages[game.world.player.frame_value], -1, -1, -1, -1, game.world.player.x, game.world.player.y, 30, 41);
+        display.drawObject(stuffManager.playerImages[game.world.player.frame_value], -1, -1, -1, -1, game.world.player.x, game.world.player.y, 40, 54);
         display.render();
     };
 
