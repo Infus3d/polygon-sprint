@@ -57,8 +57,9 @@ Game.World = class {
     }
 
     update(){
-        this.player.update(this.gravity, this.friction);
+        this.player.updatePosition(this.gravity, this.friction);
         this.collideObject(this.player);
+        this.player.updateAnimation();
     }
 
     collideObject(obj){
@@ -246,41 +247,109 @@ Game.Collider = class {
 //Any object in this world is treated like a rectangle
 //with [x, y] top-left coordinates and [width, height] sizes
 Game.World.Object = class {
-    constructor(x, y, width, height){
+    constructor(x, y, width = 0, height = 0, velocity_max = 31){
         this.x = x;
         this.y = y;
         this.old_x = x;
         this.old_y = y;
         this.width = width;
         this.height = height;
+
+        this.jumping = false;
+        this.velocity_max = this.velocity_max;
+        this.velocity_x = 0;
+        this.velocity_y = 0;
+        
     }
 
     getBottom(){ return this.y + this.height; }
     getLeft() { return this.x; }
     getTop() { return this.y; }
     getRight() { return this.x + this.width; }
+    getCenterX() { return this.x + this.width * 0.5; }
+    getCenterY() { return this.y + this.heigh * 0.5; }
 
     getOldBottom() { return this.old_y + this.height; }
     getOldLeft() { return this.old_x; }
     getOldTop() { return this.old_y; }
     getOldRight() { return this.old_x + this.width; }
+    getOldCenterX() { return this.old_x + this.width * 0.5; }
+    getOldCenterY() { return this.old_y + this.height * 0.5; }
 
     setBottom(y) { this.y = y - this.height; }
     setLeft(x) { this.x = x; }
     setTop(y) { this.y = y; }
     setRight(x) { this.x = x - this.width; }
+    setCenterX(x) { this.x = x - this.width * 0.5; }
+    setCenterY(y) { this.y = y - this.height * 0.5; }
+
+    setOldBottom(y) { this.old_y = y - this.height; }
+    setOldLeft(x) { this.old_x = x; }
+    setOldTop(y) { this.old_y = y; }
+    setOldRight(x) { this.old_x = x - this.width; }
+    setOldCenterX(x) { this.old_x = x - this.width * 0.5; }
+    setOldCenterY(y) { this.old_y = y - this.height * 0.5; }
+}
+
+Game.World.AnimatedObject = class extends Game.World.Object{
+    constructor(frame_set, frequency, mode = "loop", x, y, width = 0, height = 0, velocity_max = 31){
+        super(x, y, width, height, velocity_max);
+
+        this.counter = 0;
+        this.frequency = (frequency >= 1) ? frequency : 1;
+        this.frame_set = frame_set;
+        this.frame_index = 0;
+        this.frame_value = frame_set[0];
+        this.mode = mode;
+        this.direction_x = 1;
+    }
+
+    animate(){
+        //extendable for future 'modes' , if any
+        switch(this.mode){
+            case "loop" : this.loop(); break;
+            case "break" : break;
+        }
+    }
+
+    loop(){
+        this.counter++;
+        while(this.counter >= this.delay){
+            this.counter -= this.delay;
+            this.frame_index = (this.frame_index + 1) % this.frame_set.length;
+            this.frame_value = this.frame_set[this.frame_index];
+        }
+    }
+
+    changeFrameSet(frame_set, mode, delay = 10, frame_index = 0){
+        if(this.frame_set === frame_set) return;
+
+        this.counter = 0;
+        this.delay = delay;
+        this.frame_set = frame_set;
+        this.frame_index = frame_index;
+        this.frame_value = frame_set[frame_index];
+        this.mode = mode;
+    }
 }
 
 // Simple Player class, the variables and method names should be slef-explanatory
 // update functin is called every time the canvas screen is updated
-Game.World.Player = class extends Game.World.Object{
+Game.World.Player = class extends Game.World.AnimatedObject{
     constructor(x, y){
-        super(x, y, 25, 25);
+        super(Game.World.Player.frame_sets["idle-right"], 10, "loop", x, y, 30, 41, 31);
         this.jumping = true;
-        this.velocity_x = 0;
-        this.velocity_y = 0;
-        this.velocity_max = 31;
         this.color = "#000000";
+        this.direction_x = 1;
+    }
+
+    static frame_sets = {
+        "idle-left" : [12],
+        "jump-left" : [23],
+        "move-left" : [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
+        "idle-right": [0],
+        "jump-right": [11],
+        "move-right": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     }
     
     jump(){
@@ -292,22 +361,24 @@ Game.World.Player = class extends Game.World.Object{
     }
 
     moveLeft(){
+        this.direction_x = -1;
         this.velocity_x -= 1.5;
         this.velocity_x = this.velocity_check(this.velocity_x);
     }
 
     moveRight(){
+        this.direction_x = 1;
         this.velocity_x += 1.5;
         this.velocity_x = this.velocity_check(this.velocity_x);
     }
 
     velocity_check(velocity){
-        if(Math.abs(velocity) > this.velocity_max)
+        if(Math.abs(velocity) > this.v2elocity_max)
             velocity = this.velocity_max * Math.sign(velocity);
         return velocity;
     }
 
-    update(gravity, friction){
+    updatePosition(gravity, friction){
         this.old_x = this.x;
         this.old_y = this.y;
 
@@ -319,6 +390,23 @@ Game.World.Player = class extends Game.World.Object{
 
         this.x += this.velocity_x;
         this.y += this.velocity_y;
+    }
+
+    updateAnimation(){
+        if(this.velocity_y < 0){
+            if(this.direction_x < 0) this.changeFrameSet(Game.World.Player.frame_sets["jump-left"], "pause");
+            else this.changeFrameSet(Game.World.Player.frame_sets["jump-right"], "pause");
+        }
+        else if(this.direction_x < 0){
+            if(this.velocity_x < -0.1) this.changeFrameSet(Game.World.Player.frame_sets["move-left"], "loop");
+            else this.changeFrameSet(Game.World.Player.frame_sets["idle-left"], "pause");
+        }
+        else if(this.direction_x > 0){
+            if(this.velocity_x > 0.1) this.changeFrameSet(Game.World.Player.frame_sets["move-right"], "loop");
+            else this.changeFrameSet(Game.World.Player.frame_sets["idle-right"], "pause");
+        }
+
+        this.animate();
     }
 }
 
