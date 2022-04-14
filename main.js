@@ -1,6 +1,9 @@
 window.addEventListener("load", function(event){
     "use strict";
 
+    let difficulty = sessionStorage.getItem('difficulty');
+    if(difficulty == undefined) difficulty = "easy";
+
     class StuffManager {
         constructor(){
             this.tileSheetImage = undefined;
@@ -12,11 +15,14 @@ window.addEventListener("load", function(event){
             this.playerImages = [];
         }
         
-        //current count of loaded files (images, json files, etc)
+        //current count of loaded images
         static totalLoadCount = 0;
         //the threshold the counts need to reach before initiating the game with runner.start()
         static loadThreshold = 2 + 12 + 12; //1 background, 1 tilesheet, 12 player_right, 12 player_left
 
+        /**
+         * Used to load an image.
+         */
         requestImage(url, callbackFunction){
             let img = new Image();
             img.src = url;
@@ -27,9 +33,16 @@ window.addEventListener("load", function(event){
                     stuffManager.sortPlayerImages();
                     runner.start();
                 }
-            });
+            }, {once:true});
         }
-
+        
+        /**
+         * This method is useful for re-ordering the images in the order you intended. Some images (a) take more
+         * time to load than others(b), even though the requests to load (a) comes before (b) in the code.
+         * 
+         * Uses insertion-sort to sort the images by their name, which are simply the numbers representing their
+         * order in 'img/player' directory.
+         */
         sortPlayerImages(){
             for(let i=1; i<this.playerImages.length; i++){
                 let cur = i;
@@ -61,15 +74,15 @@ window.addEventListener("load", function(event){
     };
 
     //TODO add a function that adds a new map/tilesheet. for now i just used the same tilemap
-    let renderUpdate = function () {
-        display.clearCanvas();
-        display.drawBackground(stuffManager.backgroundImage);
-        display.drawMap(stuffManager.tileSheetImage, stuffManager.tileSheet_columns, stuffManager.tileSheet_tile_size, stuffManager.tileSheet_spacing,
-            game.world.map, game.world.columns, game.world.tile_set.tile_size);
-        //display.drawPlayer(game.world.player, game.world.player.color);
-        display.drawObject(stuffManager.playerImages[game.world.player.frame_value], -1, -1, -1, -1, game.world.player.x, game.world.player.y, 40, 54);
-        display.render();
-    };
+    // let renderUpdate = function () {
+    //     display.clearCanvas();
+    //     display.drawBackground(stuffManager.backgroundImage);
+    //     display.drawMap(stuffManager.tileSheetImage, stuffManager.tileSheet_columns, stuffManager.tileSheet_tile_size, stuffManager.tileSheet_spacing,
+    //         game.world.map, game.world.columns, game.world.tile_set.tile_size);
+    //     //display.drawPlayer(game.world.player, game.world.player.color);
+    //     display.drawObject(stuffManager.playerImages[game.world.player.frame_value], -1, -1, -1, -1, game.world.player.x, game.world.player.y, 40, 54);
+    //     display.render();
+    // };
 
     let update = function(){
         if (controller.left.active == true) {
@@ -83,15 +96,22 @@ window.addEventListener("load", function(event){
             controller.up.active = false;
         }
 
-        if (game.world.player.getRight() >= display.getDisplayWidth()) {
-            game.world.player.x = 1;
-            // renderUpdate(); //will be worked on
-        }
-        else if (game.world.player.getLeft() <= 0) {
-            game.world.player.x = display.getDisplayWidth() - (game.world.player.width+1);
-            //renderUpdate(); //will be worked on
-        }
+        // This is handled in the Game.World class
+        // if (game.world.player.getRight() >= display.getDisplayWidth()) {
+        //     game.world.player.x = 1;
+        //     // renderUpdate(); //will be worked on
+        // }
+        // else if (game.world.player.getLeft() <= 0) {
+        //     game.world.player.x = display.getDisplayWidth() - (game.world.player.width+1);
+        //     //renderUpdate(); //will be worked on
+        // }
         game.update();
+
+        if(game.world.triggeredDoor != undefined){
+            runner.stop();
+            game.world.setup(levels[difficulty][game.world.triggeredDoor.destination_room]);
+            runner.start();
+        }
     };
 
     let keyDownUp = function(event){
@@ -103,6 +123,8 @@ window.addEventListener("load", function(event){
     let display         = new Display(document.getElementById("gameCanvas"));
     let game = new Game();
     let runner = new Runner(1000 / 45, update, renderSpawn);
+
+    game.world.setup(levels[difficulty]["01"]);
 
     display.resize(game.world.width, game.world.height);
     stuffManager.requestImage("img/tiles_spritesheet.png", (image) => {

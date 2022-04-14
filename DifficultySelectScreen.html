@@ -26,13 +26,17 @@
 }
 
 </style>
-
+<script>
+    function setDifficulty(difficulty){
+        sessionStorage.setItem('difficulty', difficulty);
+    }
+</script>
 </head>
 
 <body>
 <div class="Button">
-    <button style = "height:40px;width:100px" id="Easy">Easy</button>
-    <button style = "height:40px;width:100px" id="Medium">Medium</button>
-    <button style = "height:40px;width:100px" id="Hard">Hard</button>
+    <button style = "height:40px;width:100px" id="Easy" onclick="setDifficulty('easy')">Easy</button>
+    <button style = "height:40px;width:100px" id="Medium" onclick="setDifficulty('medium')">Medium</button>
+    <button style = "height:40px;width:100px" id="Hard" onclick="setDifficulty('hard')">Hard</button>
 </div>
 </body>

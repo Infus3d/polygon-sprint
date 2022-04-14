@@ -8,65 +8,76 @@ class Game {
 }
 
 Game.World = class {
-    constructor(){
-        this.friction = 0.8;
-        this.gravity = 3;
+    constructor(friction = 0.8, gravity = 3){
+        this.friction = friction;
+        this.gravity = gravity;
 
         this.columns = 30;
         this.rows = 20;
 
         this.tile_set = new Game.World.TileSet(32);
-        this.player = new Game.World.Player(20, 300);
+        this.player = new Game.World.Player(40, 300);
         this.collider = new Game.Collider();
 
-        // this.map = [48,17,17,17,49,48,18,19,16,17,35,36,
-        //     10,39,39,39,16,18,39,31,31,31,39, 7,
-        //     10,31,39,31,31,31,39,12, 5, 5,28, 1,
-        //     35, 6,39,39,31,39,39,19,39,39, 8, 9,
-        //      2,31,31,47,39,47,39,31,31, 4,36,25,
-        //     10,39,39,31,39,39,39,31,31,31,39,37,
-        //     10,39,31, 4,14, 6,39,39, 3,39, 0,42,
-        //     49, 2,31,31,11,39,39,31,11, 0,42, 9,
-        //      8,40,27,13,37,27,13, 3,22,34, 9,24];
-
-        this.map = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            104, 104, 104, 104, 104, 105, 0, 0, 0, 0, 0, 0, 0, 0, 69, 57, 57, 57, 57, 57, 45, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            153, 153, 153, 153, 153, 0, 0, 0, 129, 104, 104, 105, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            153, 153, 153, 153, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 133, 133, 0, 0, 0, 0, 0, 0, 0, 117, 104, 104, 104, 0, 0,
-            153, 153, 153, 0, 0, 0, 81, 0, 0, 0, 0, 0, 0, 0, 0, 133, 133, 133, 0, 0, 0, 0, 0, 0, 0, 153, 153, 153, 0, 65,
-            153, 153, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 116, 104, 104, 104, 104, 92, 0, 0, 0, 0, 0, 153, 153, 153, 104, 104,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 81, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 69, 45, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 69, 57, 57, 45, 0, 0, 0,
-            0, 0, 0, 81, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 104,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 153,
-            104, 104, 104, 104, 104, 104, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 117, 104, 104, 104, 93, 0, 0, 0, 0, 0, 129, 104, 153,
-            153, 153, 153, 153, 153, 153, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 153, 153, 153, 0, 0, 0, 0, 0, 0, 0, 0, 153,
-            153, 153, 153, 153, 153, 153, 104, 104, 104, 105, 0, 0, 69, 57, 45, 0, 0, 0, 153, 153, 153, 0, 0, 0, 129, 104, 104, 104, 104, 153,
-            153, 153, 153, 153, 153, 153, 153, 153, 153, 0, 0, 0, 0, 0, 0, 0, 0, 0, 153, 153, 153, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            153, 153, 153, 153, 153, 153, 153, 153, 153, 115, 115, 115, 115, 115, 115, 115, 115, 115, 153, 153, 153, 115, 115, 115, 115, 115, 115, 115, 115, 115,
-            153, 153, 153, 153, 153, 153, 153, 153, 153, 44, 44, 44, 44, 44, 44, 44, 44, 44, 153, 153, 153, 44, 44, 44, 44, 44, 44, 44, 44, 44];
+        this.room_id = "01";
+        this.doors = [];
+        this.triggeredDoor = undefined;
         
-        this.collision_map = Game.Collider.getCollisionMap(this.map);
+        this.map = [];
+        this.collision_map = [];
 
         this.width = this.tile_set.tile_size * this.columns;
         this.height = this.tile_set.tile_size * this.rows;
     }
 
+    setup(room){
+        this.doors = [];
+        this.map = room.map;
+        this.collision_map = Game.Collider.getCollisionMap(this.map);
+        this.columns = room.columns;
+        this.rows = room.rows;
+        this.room_id = room.id;
+
+        for(let i = room.doors.length-1; i >= 0; i--){
+            let curDoor = room.doors[i];
+            this.doors[i] = new Game.Door(curDoor, this.tile_set.tile_size);
+        }
+
+        //-1 is the reserved number -> it indicates that we should keep the position in that axis
+        if(this.triggeredDoor != undefined){
+            if(this.triggeredDoor.destination_x != -1){
+                this.player.setCenterX(this.triggeredDoor.destination_x);
+                this.player.setOldCenterX(this.triggeredDoor.destination_x); //need to reset the previous positions
+            }
+            
+            if(this.triggeredDoor.desination_y != -1){
+                this.player.setCenterY(this.triggeredDoor.destination_y);
+                this.player.setOldCenterY(this.triggeredDoor.destination_y); //again important to reset both
+            }
+            document.getElementById("ppp").innerHTML = "" + this.player.getTop() + " " + this.player.getLeft() + " | " + this.triggeredDoor.destination_x + " " + this.triggeredDoor.destination_y;
+
+            this.triggeredDoor = undefined;
+        }
+    }
+
     update(){
         this.player.updatePosition(this.gravity, this.friction);
         this.collideObject(this.player);
+
+        for(let i = this.doors.length-1; i >= 0; i--){
+            let curDoor = this.doors[i];
+            if(curDoor.collideObjectCenter(this.player))
+                this.triggeredDoor = curDoor;
+        }
+
         this.player.updateAnimation();
     }
 
     collideObject(obj){
         //Making sure the object stays within this 'world'
-        if(obj.getLeft() < 0) { obj.setLeft(0); obj.velocity_x = 0; }
-        if(obj.getRight() > this.width) { obj.setRight(this.width); obj.velocity_x = 0; }
-        if(obj.getTop() < 0) { obj.setTop(0); obj.velocity_y = 0; }
+        // if(obj.getLeft() < 0) { obj.setLeft(0); obj.velocity_x = 0; }
+        // if(obj.getRight() > this.width) { obj.setRight(this.width); obj.velocity_x = 0; }
+        // if(obj.getTop() < 0) { obj.setTop(0); obj.velocity_y = 0; }
         if(obj.getBottom() > this.height) { obj.setBottom(this.height); obj.velocity_y = 0; obj.jumping = false; }
 
 
@@ -91,7 +102,6 @@ Game.World = class {
         left = Math.floor(obj.getLeft() / this.tile_set.tile_size); // [x, y] coordinates of the tile
         collision_value = this.collision_map[top * this.columns + left];
         this.collider.routeCollision(collision_value, obj, left * this.tile_set.tile_size, top * this.tile_set.tile_size, this.tile_set.tile_size);
-
 
         top = Math.floor(obj.getTop() / this.tile_set.tile_size);
         right = Math.floor(obj.getRight() / this.tile_set.tile_size);
@@ -183,7 +193,6 @@ Game.Collider = class {
     
     collidePlatformTop(object, tile_top) {
         if (object.getBottom() > tile_top && object.getOldBottom() <= tile_top) {
-            document.getElementById("ppp").innerHTML = "" + object.getBottom() + " " + object.getOldBottom() + " " + tile_top;
             object.setBottom(tile_top - 1);
             object.velocity_y = 0;
             object.jumping    = false;
@@ -246,6 +255,7 @@ Game.Collider = class {
                 case 93 : col_map.push(15); break;
                 case 104 : col_map.push(15); break;
                 case 105 : col_map.push(15); break;
+                case 103 : col_map.push(0); break;
                 case 115 : col_map.push(0); break;
                 case 116 : col_map.push(15); break;
                 case 117 : col_map.push(15); break;
@@ -268,7 +278,7 @@ Game.Collider = class {
 //Any object in this world is treated like a rectangle
 //with [x, y] top-left coordinates and [width, height] sizes
 Game.World.Object = class {
-    constructor(x, y, width = 0, height = 0, velocity_max = 31){
+    constructor(x = 0, y = 0, width = 0, height = 0, velocity_max = 31){
         this.x = x;
         this.y = y;
         this.old_x = x;
@@ -281,6 +291,22 @@ Game.World.Object = class {
         this.velocity_x = 0;
         this.velocity_y = 0;
         
+    }
+
+    collideObject(object){
+        if(this.getRight() < object.getLeft() ||
+            this.getBottom() < object.getTop() ||
+            this.getLeft() > object.getRight() ||
+            this.getTop() > object.getBottom()) return false;
+        
+        return true;
+    }
+
+    collideObjectCenter(object){
+        if(object.getCenterX() < this.getLeft() || object.getCenterX() > this.getRight()
+            || object.getCenterY() < this.getTop() || object.getCenterY() > this.getBottom()) return false;
+        
+        return true;
     }
 
     getBottom(){ return this.y + this.height; }
@@ -312,12 +338,33 @@ Game.World.Object = class {
     setOldCenterY(y) { this.old_y = y - this.height * 0.5; }
 }
 
+/**
+ * Very simple class for door objects. Has [x, y] coordinates with width and height.
+ * Also the destination coordinates and room id
+ * -69 is a reserved number for a tile, it indicates that we should keep the position on that axis
+ */
+ Game.Door = class extends Game.World.Object {
+    constructor(door, tile_size = 32){
+        super(door.tile_x * tile_size, door.tile_y * tile_size, door.width, door.height);
+        this.destination_x = (door.destination_tile_x == -69) ? -1 : (door.destination_tile_x * tile_size); //if it's a special case (-69) we mark it as -1
+        this.destination_y = (door.destination_tile_y == -69) ? -1 : (door.destination_tile_y * tile_size); //as it's an impossible coordinate for a destination
+        this.destination_room = door.destination_room;
+    }
+}
+
+/**
+ * Class for Animated Objects.
+ * The main and only purpose of the class is to store the 'frames' for animation (like many moving states of the player)
+ * and switch from one frame to the next in every $delay$ number of updates of the game.
+ * 
+ * mode for now has two states 'loop' (for animated states like moving) and 'pause' (for not animated states like standing idle)
+ */
 Game.World.AnimatedObject = class extends Game.World.Object{
-    constructor(frame_set, frequency, mode = "loop", x, y, width = 0, height = 0, velocity_max = 31){
+    constructor(frame_set, delay, mode = "loop", x, y, width = 0, height = 0, velocity_max = 31){
         super(x, y, width, height, velocity_max);
 
         this.counter = 0;
-        this.frequency = (frequency >= 1) ? frequency : 1;
+        this.delay = (delay >= 1) ? delay : 1;
         this.frame_set = frame_set;
         this.frame_index = 0;
         this.frame_value = frame_set[0];
@@ -329,7 +376,7 @@ Game.World.AnimatedObject = class extends Game.World.Object{
         //extendable for future 'modes' , if any
         switch(this.mode){
             case "loop" : this.loop(); break;
-            case "break" : break;
+            case "pause" : break;
         }
     }
 
@@ -342,7 +389,8 @@ Game.World.AnimatedObject = class extends Game.World.Object{
         }
     }
 
-    changeFrameSet(frame_set, mode, delay = 7, frame_index = 0){
+    // This function is called to change from one frame_set (ex: moving-left) to another (ex: standing still)
+    changeFrameSet(frame_set, mode, delay = 5, frame_index = 0){
         if(this.frame_set === frame_set) return;
 
         this.counter = 0;
@@ -358,7 +406,7 @@ Game.World.AnimatedObject = class extends Game.World.Object{
 // update functin is called every time the canvas screen is updated
 Game.World.Player = class extends Game.World.AnimatedObject{
     constructor(x, y){
-        super(Game.World.Player.frame_sets["idle-right"], 7, "loop", x, y, 35, 47, 31);
+        super(Game.World.Player.frame_sets["idle-right"], 5, "loop", x, y, 35, 50, 31); //should be [width, height] = [40, 54] but setting it smaller makes it collide better
         this.jumping = true;
         this.color = "#000000";
         this.direction_x = 1;
