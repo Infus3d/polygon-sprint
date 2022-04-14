@@ -50,7 +50,7 @@ Game.World = class {
                 this.player.setOldCenterX(this.triggeredDoor.destination_x); //need to reset the previous positions
             }
             
-            if(this.triggeredDoor.desination_y != -1){
+            if(this.triggeredDoor.destination_y != -1){
                 this.player.setCenterY(this.triggeredDoor.destination_y);
                 this.player.setOldCenterY(this.triggeredDoor.destination_y); //again important to reset both
             }
@@ -101,43 +101,43 @@ Game.World = class {
         top = Math.floor(obj.getTop() / this.tile_set.tile_size);  //this are actually just the
         left = Math.floor(obj.getLeft() / this.tile_set.tile_size); // [x, y] coordinates of the tile
         collision_value = this.collision_map[top * this.columns + left];
-        this.collider.routeCollision(collision_value, obj, left * this.tile_set.tile_size, top * this.tile_set.tile_size, this.tile_set.tile_size);
+        if(top >= 0 && left >= 0) this.collider.routeCollision(collision_value, obj, left * this.tile_set.tile_size, top * this.tile_set.tile_size, this.tile_set.tile_size);
 
         top = Math.floor(obj.getTop() / this.tile_set.tile_size);
         right = Math.floor(obj.getRight() / this.tile_set.tile_size);
         collision_value = this.collision_map[top * this.columns + right];
-        this.collider.routeCollision(collision_value, obj, right * this.tile_set.tile_size, top * this.tile_set.tile_size, this.tile_set.tile_size);
+        if(top >= 0 && right < this.columns) this.collider.routeCollision(collision_value, obj, right * this.tile_set.tile_size, top * this.tile_set.tile_size, this.tile_set.tile_size);
 
         bottom = Math.floor(obj.getBottom() / this.tile_set.tile_size);
         left = Math.floor(obj.getLeft() / this.tile_set.tile_size);
         collision_value = this.collision_map[bottom * this.columns + left];
-        this.collider.routeCollision(collision_value, obj, left * this.tile_set.tile_size, bottom * this.tile_set.tile_size, this.tile_set.tile_size);
+        if(bottom < this.rows && left >= 0) this.collider.routeCollision(collision_value, obj, left * this.tile_set.tile_size, bottom * this.tile_set.tile_size, this.tile_set.tile_size);
 
         bottom = Math.floor(obj.getBottom() / this.tile_set.tile_size);
         right = Math.floor(obj.getRight() / this.tile_set.tile_size);
         collision_value = this.collision_map[bottom * this.columns + right];
-        this.collider.routeCollision(collision_value, obj, right * this.tile_set.tile_size, bottom * this.tile_set.tile_size, this.tile_set.tile_size);
+        if(right < this.columns && bottom < this.rows) this.collider.routeCollision(collision_value, obj, right * this.tile_set.tile_size, bottom * this.tile_set.tile_size, this.tile_set.tile_size);
 
 
         top = Math.floor(obj.getTop() / this.tile_set.tile_size);
         horMid = Math.floor((obj.getLeft() + obj.width * 0.5) / this.tile_set.tile_size);
         collision_value = this.collision_map[top * this.columns + horMid];
-        this.collider.routeCollision(collision_value, obj, horMid * this.tile_set.tile_size, top * this.tile_set.tile_size, this.tile_set.tile_size);
+        if(top >= 0) this.collider.routeCollision(collision_value, obj, horMid * this.tile_set.tile_size, top * this.tile_set.tile_size, this.tile_set.tile_size);
 
         bottom = Math.floor(obj.getBottom() / this.tile_set.tile_size);
         horMid = Math.floor((obj.getLeft() + obj.width * 0.5) / this.tile_set.tile_size);
         collision_value = this.collision_map[bottom * this.columns + horMid];
-        this.collider.routeCollision(collision_value, obj, horMid * this.tile_set.tile_size, bottom * this.tile_set.tile_size, this.tile_set.tile_size);
+        if(bottom < this.rows) this.collider.routeCollision(collision_value, obj, horMid * this.tile_set.tile_size, bottom * this.tile_set.tile_size, this.tile_set.tile_size);
 
         verMid = Math.floor((obj.getTop() + obj.height * 0.5) / this.tile_set.tile_size);
         left = Math.floor(obj.getLeft() / this.tile_set.tile_size);
         collision_value = this.collision_map[verMid * this.columns + left];
-        this.collider.routeCollision(collision_value, obj, left * this.tile_set.tile_size, verMid * this.tile_set.tile_size, this.tile_set.tile_size);
+        if(left >= 0) this.collider.routeCollision(collision_value, obj, left * this.tile_set.tile_size, verMid * this.tile_set.tile_size, this.tile_set.tile_size);
 
         verMid = Math.floor((obj.getTop() + obj.height * 0.5) / this.tile_set.tile_size);
         right = Math.floor(obj.getRight() / this.tile_set.tile_size);
         collision_value = this.collision_map[verMid * this.columns + right];
-        this.collider.routeCollision(collision_value, obj, right * this.tile_set.tile_size, verMid * this.tile_set.tile_size, this.tile_set.tile_size);
+        if(right < this.columns) this.collider.routeCollision(collision_value, obj, right * this.tile_set.tile_size, verMid * this.tile_set.tile_size, this.tile_set.tile_size);
     }
 }
 
@@ -232,7 +232,7 @@ Game.Collider = class {
     collidePlatformLeft(object, tile_left) {
 
         if (object.getRight() > tile_left && object.getOldRight() <= tile_left) {
-    
+            document.getElementById("ppp").innerHTML = "collidePlatformLeft " + object.getRight() + " | " + tile_left + " | " + object.getOldRight(); 
           object.setRight(tile_left - 1); // -0.01 is to fix a small problem with rounding, I think -1 also works, and is a lot more convenient but need to test
           object.velocity_x = 0;
           return true;
