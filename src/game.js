@@ -30,6 +30,13 @@ Game.World = class {
         this.height = this.tile_set.tile_size * this.rows;
     }
 
+    getPlayerTileNumber(){
+        let playerY = this.player.getCenterY();
+        let playerX = this.player.getCenterX();
+
+
+    }
+
     setup(room){
         this.doors = [];
         this.map = room.map;
@@ -314,7 +321,7 @@ Game.World.Object = class {
     getTop() { return this.y; }
     getRight() { return this.x + this.width; }
     getCenterX() { return this.x + this.width * 0.5; }
-    getCenterY() { return this.y + this.heigh * 0.5; }
+    getCenterY() { return this.y + this.height * 0.5; }
 
     getOldBottom() { return this.old_y + this.height; }
     getOldLeft() { return this.old_x; }

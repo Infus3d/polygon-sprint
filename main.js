@@ -107,7 +107,6 @@ window.addEventListener("load", function(event){
         //     //renderUpdate(); //will be worked on
         // }
         game.update();
-
         if(game.world.triggeredDoor != undefined){
             runner.stop();
             game.world.setup(levels[difficulty][game.world.triggeredDoor.destination_room]);
