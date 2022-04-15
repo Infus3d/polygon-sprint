@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "jest": "^27.5.1"
+  },
+  "name": "tests",
+  "version": "1.0.0",
+  "main": "game.test.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

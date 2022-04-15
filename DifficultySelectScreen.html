@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+
+<head>
+<style>
+.Button {
+    text-align: justify;
+}
+
+.Button:after {
+    content:'';
+    display: inline-block;
+    width: 99.5%;
+}
+
+.Button {
+    min-width: 45em;
+    padding: 1.2em 1em 0;
+    box-shadow: 0 0 5px;
+    margin: 1em;
+    border-radius: 0.25em;
+    position: absolute;
+    top: 50%;
+    left: 20%;
+    -ms-transform: translateY(-50%, -20%);
+    transform: translateY(-50%, -20%);
+}
+
+</style>
+<script>
+    function setDifficulty(difficulty){
+        sessionStorage.setItem('difficulty', difficulty);
+    }
+</script>
+</head>
+
+<body>
+<div class="Button">
+    <button style = "height:40px;width:100px" id="Easy" onclick="setDifficulty('easy')">Easy</button>
+    <button style = "height:40px;width:100px" id="Medium" onclick="setDifficulty('medium')">Medium</button>
+    <button style = "height:40px;width:100px" id="Hard" onclick="setDifficulty('hard')">Hard</button>
+</div>
+</body>
