@@ -96,8 +96,9 @@ window.addEventListener("load", function(event){
             controller.up.active = false;
         }
 
-        //game.world.getPlayerTileNumber();
-        console.log("canvas height: " + display.buffer.canvas.height + "\nwidth: " + display.buffer.canvas.width);
+        game.world.getTileValue();
+        //console.log("width: " + display.buffer.canvas.width + " height: " + display.buffer.canvas.height);
+
         // This is handled in the Game.World class
         // if (game.world.player.getRight() >= display.getDisplayWidth()) {
         //     game.world.player.x = 1;
@@ -125,6 +126,7 @@ window.addEventListener("load", function(event){
     let game = new Game();
     let runner = new Runner(1000 / 45, update, renderSpawn);
 
+    game.world.setDifficulty(difficulty);
     game.world.setup(levels[difficulty]["01"]);
 
     display.resize(game.world.width, game.world.height);

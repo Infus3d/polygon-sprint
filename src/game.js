@@ -28,6 +28,12 @@ Game.World = class {
 
         this.width = this.tile_set.tile_size * this.columns;
         this.height = this.tile_set.tile_size * this.rows;
+
+        this.difficulty = null;
+    }
+
+    setDifficulty(difficulty) {
+        this.difficulty = difficulty;
     }
 
     setup(room){
@@ -73,20 +79,16 @@ Game.World = class {
         this.player.updateAnimation();
     }
 
-    getPlayerTileNumber(){
-        let top = Math.floor(this.player.getTop() / this.tile_set.tile_size);  //this are actually just the
-        let left = Math.floor(this.player.getLeft() / this.tile_set.tile_size); // [x, y] coordinates of the tile
-        let right = Math.floor(this.player.getRight() / this.tile_set.tile_size);
-        let bottom = Math.floor(this.player.getBottom() / this.tile_set.tile_size);
-        let collision_value_TL = this.collision_map[top * this.columns + left];
-        let collision_value_TR = this.collision_map[top * this.columns + right];
-        let collision_value_BL = this.collision_map[bottom * this.columns + left];
-        let collision_value_BR = this.collision_map[bottom * this.columns + right];
-        console.log("player position: " + this.player.x + " " + this.player.y );
-        if(collision_value_TL + collision_value_TR + collision_value_BL + collision_value_BR != 0){
-            console.log("tile value: " + collision_value_TL + collision_value_TR + collision_value_BL + collision_value_BR);
-        }
+    getTileValue(){
+        //this gets the tile underneath the player
+        let a = Math.round(this.player.getCenterX() / 32);
+        let b = Math.round(this.player.getBottom() / 32);
 
+        let tileVal = this.map[b * 30 + a]; //30 represents the 30 columns
+
+        if(tileVal == 44 || tileVal == 115 || tileVal == 113){
+            window.location.href = 'GameOver.html';
+        }
 
     }
 
@@ -264,6 +266,7 @@ Game.Collider = class {
         for(let i = 0; i < map.length; i++){
             switch(map[i]){
                 case 44 : col_map.push(0); break;
+                //case 44:  window.location.href = 'GameOver.html';
                 case 45 : col_map.push(1); break;
                 case 57 : col_map.push(1); break;
                 case 69 : col_map.push(1); break;
