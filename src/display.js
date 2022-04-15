@@ -49,5 +49,6 @@ class Display {
     getDisplayWidth() {
         return this.buffer.canvas.width;
     }
+
 }
 

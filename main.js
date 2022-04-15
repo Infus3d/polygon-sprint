@@ -96,7 +96,8 @@ window.addEventListener("load", function(event){
             controller.up.active = false;
         }
 
-
+        //game.world.getPlayerTileNumber();
+        console.log("canvas height: " + display.buffer.canvas.height + "\nwidth: " + display.buffer.canvas.width);
         // This is handled in the Game.World class
         // if (game.world.player.getRight() >= display.getDisplayWidth()) {
         //     game.world.player.x = 1;

@@ -30,13 +30,6 @@ Game.World = class {
         this.height = this.tile_set.tile_size * this.rows;
     }
 
-    getPlayerTileNumber(){
-        let playerY = this.player.getCenterY();
-        let playerX = this.player.getCenterX();
-
-
-    }
-
     setup(room){
         this.doors = [];
         this.map = room.map;
@@ -78,6 +71,23 @@ Game.World = class {
         }
 
         this.player.updateAnimation();
+    }
+
+    getPlayerTileNumber(){
+        let top = Math.floor(this.player.getTop() / this.tile_set.tile_size);  //this are actually just the
+        let left = Math.floor(this.player.getLeft() / this.tile_set.tile_size); // [x, y] coordinates of the tile
+        let right = Math.floor(this.player.getRight() / this.tile_set.tile_size);
+        let bottom = Math.floor(this.player.getBottom() / this.tile_set.tile_size);
+        let collision_value_TL = this.collision_map[top * this.columns + left];
+        let collision_value_TR = this.collision_map[top * this.columns + right];
+        let collision_value_BL = this.collision_map[bottom * this.columns + left];
+        let collision_value_BR = this.collision_map[bottom * this.columns + right];
+        console.log("player position: " + this.player.x + " " + this.player.y );
+        if(collision_value_TL + collision_value_TR + collision_value_BL + collision_value_BR != 0){
+            console.log("tile value: " + collision_value_TL + collision_value_TR + collision_value_BL + collision_value_BR);
+        }
+
+
     }
 
     collideObject(obj){
