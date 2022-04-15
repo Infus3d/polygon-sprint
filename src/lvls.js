@@ -22,7 +22,10 @@ let levels = {
                     "destination_tile_y" : -69
                 }
             ],
-            
+            "coins" : [
+                [8, 2],
+                [20, 13]
+            ],
             "columns" : 30,
             "rows" : 20,
         
@@ -60,7 +63,9 @@ let levels = {
                     "destination_tile_y" : 1
                 }
             ],
-            
+            "coins" : [
+                
+            ],
             "columns" : 30,
             "rows" : 20,
         
@@ -98,7 +103,9 @@ let levels = {
                     "destination_tile_y" : -69
                 }
             ],
-            
+            "coins" : [
+                
+            ],
             "columns" : 30,
             "rows" : 20,
         

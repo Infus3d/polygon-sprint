@@ -26,6 +26,9 @@ Game.World = class {
         this.map = [];
         this.collision_map = [];
 
+        this.coins = [];
+        this.coinCount = 0;
+
         this.width = this.tile_set.tile_size * this.columns;
         this.height = this.tile_set.tile_size * this.rows;
 
@@ -38,6 +41,7 @@ Game.World = class {
 
     setup(room){
         this.doors = [];
+        this.coins = [];
         this.map = room.map;
         this.collision_map = Game.Collider.getCollisionMap(this.map);
         this.columns = room.columns;
@@ -47,6 +51,11 @@ Game.World = class {
         for(let i = room.doors.length-1; i >= 0; i--){
             let curDoor = room.doors[i];
             this.doors[i] = new Game.Door(curDoor, this.tile_set.tile_size);
+        }
+
+        for(let i = room.coins.length-1; i >= 0; i--){
+            let curCoin = room.coins[i];
+            this.coins[i] = new Game.Coin((curCoin[0] - 0) * this.tile_set.tile_size, (curCoin[1] - 0) * this.tile_set.tile_size);
         }
 
         //-1 is the reserved number -> it indicates that we should keep the position in that axis
@@ -74,6 +83,16 @@ Game.World = class {
             let curDoor = this.doors[i];
             if(curDoor.collideObjectCenter(this.player))
                 this.triggeredDoor = curDoor;
+        }
+
+        for(let i = this.coins.length-1; i >= 0; i--){
+            let curCoin = this.coins[i];
+            curCoin.animate();
+
+            if(curCoin.collideObject(this.player)){
+                this.coins.splice(this.coins.indexOf(curCoin), 1);
+                this.coinCount++; //This is the coin score, need to do something with it
+            }
         }
 
         this.player.updateAnimation();
@@ -167,8 +186,8 @@ Game.Collider = class {
                 /*  All 15 tile types can be described with only 4 collision methods. These
                     methods are mixed and matched for each unique tile.
                     Since the tiles are squares in our game, it can have 4 different sides to collide with.
-                    You can imagine a binary number [0000] where each bit represents the one side of the square.
-                    If there is a wall on that side, the bit is set 1, if not 0.
+                    You can imagine a binary number [0000] where each bit represents one side of the square.
+                    If there is a wall on that side, the bit is set 1, and 0 if there is not a wall.
                 */
         
                 case  1: this.collidePlatformTop      (object, tile_y            ); break;
@@ -494,6 +513,16 @@ Game.World.Player = class extends Game.World.AnimatedObject{
         }
 
         this.animate();
+    }
+}
+
+Game.Coin = class extends Game.World.AnimatedObject{
+    constructor(x, y){
+        super(Game.Coin.frame_sets["coin-twirl"], 5, "loop", x, y, 45, 48, 31);
+    }
+
+    static frame_sets = {
+        "coin-twirl" : [0, 1, 2, 3, 4, 5, 6, 7]
     }
 }
 

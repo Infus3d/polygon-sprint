@@ -13,12 +13,13 @@ window.addEventListener("load", function(event){
 
             this.backgroundImage = undefined;
             this.playerImages = [];
+            this.coinImages = [];
         }
         
         //current count of loaded images
         static totalLoadCount = 0;
         //the threshold the counts need to reach before initiating the game with runner.start()
-        static loadThreshold = 2 + 12 + 12; //1 background, 1 tilesheet, 12 player_right, 12 player_left
+        static loadThreshold = 2 + 12 + 12 + 8; //1 background, 1 tilesheet, 12 player_right, 12 player_left, 8 coin images
 
         /**
          * Used to load an image.
@@ -30,7 +31,7 @@ window.addEventListener("load", function(event){
                 StuffManager.totalLoadCount++;
                 callbackFunction(img);
                 if(StuffManager.totalLoadCount == StuffManager.loadThreshold){
-                    stuffManager.sortPlayerImages();
+                    stuffManager.sortAllImages();
                     runner.start();
                 }
             }, {once:true});
@@ -41,9 +42,9 @@ window.addEventListener("load", function(event){
          * time to load than others(b), even though the requests to load (a) comes before (b) in the code.
          * 
          * Uses insertion-sort to sort the images by their name, which are simply the numbers representing their
-         * order in 'img/player' directory.
+         * order in ex. 'img/player' directory.
          */
-        sortPlayerImages(){
+        sortAllImages(){
             for(let i=1; i<this.playerImages.length; i++){
                 let cur = i;
                 while(cur > 0){
@@ -60,6 +61,23 @@ window.addEventListener("load", function(event){
                     cur--;
                 }
             }
+
+            for(let i=1; i<this.coinImages.length; i++){
+                let cur = i;
+                while(cur > 0){
+                    let curLen = this.coinImages[cur].currentSrc.length;
+                    let prevLen = this.coinImages[cur-1].currentSrc.length;
+
+                    let curInt = parseInt(this.coinImages[cur].currentSrc.substring(curLen-6, curLen-4));
+                    let prevInt = parseInt(this.coinImages[cur-1].currentSrc.substring(prevLen-6, prevLen-4));
+                    if(curInt >= prevInt) break;
+                    
+                    let temp = this.coinImages[cur];
+                    this.coinImages[cur] = this.coinImages[cur-1];
+                    this.coinImages[cur-1] = temp;
+                    cur--;
+                }
+            }
         }
     }
 
@@ -69,6 +87,12 @@ window.addEventListener("load", function(event){
         display.drawMap(stuffManager.tileSheetImage, stuffManager.tileSheet_columns, stuffManager.tileSheet_tile_size, stuffManager.tileSheet_spacing,
              game.world.map, game.world.columns, game.world.tile_set.tile_size);
         // display.drawPlayer(game.world.player, game.world.player.color);
+
+        for(let i = game.world.coins.length-1; i >= 0; i--){
+            let coin = game.world.coins[i];
+            display.drawObject(stuffManager.coinImages[coin.frame_value], -1, -1, -1, -1, coin.x, coin.y, 30, 32);
+        }
+
         display.drawObject(stuffManager.playerImages[game.world.player.frame_value], -1, -1, -1, -1, game.world.player.x, game.world.player.y, 40, 54);
         display.render();
     };
@@ -122,8 +146,9 @@ window.addEventListener("load", function(event){
 
     game.world.setDifficulty(difficulty);
     game.world.setup(levels[difficulty]["01"]);
-
     display.resize(game.world.width, game.world.height);
+
+    /********************* Loading images start **********************/
     stuffManager.requestImage("img/tiles_spritesheet.png", (image) => {
         stuffManager.tileSheetImage = image;
         stuffManager.tileSheet_tile_size = 70;
@@ -139,6 +164,13 @@ window.addEventListener("load", function(event){
             stuffManager.playerImages.push(image);
         });
     }
+
+    for(let i=1; i<=8; i++){
+        stuffManager.requestImage("img/coins/coin_0" + i + ".png", (image) => {
+            stuffManager.coinImages.push(image);
+        });
+    }
+    /*********************** Loading images end *********************/
 
     window.addEventListener("keydown", keyDownUp);
     window.addEventListener("keyup", keyDownUp);
