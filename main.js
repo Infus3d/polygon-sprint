@@ -50,7 +50,7 @@ window.addEventListener("load", function(event){
             game.world.player.jump();
             controller.up.active = false;
         }
-
+        //this checks if the player is at crossing the border on either the left of the right side of the screen. it will need more work
         if (game.world.player.getRight() >= display.getDisplayWidth()) {
             game.world.player.x = 1;
             renderUpdate(); //will be worked on
@@ -87,3 +87,4 @@ window.addEventListener("load", function(event){
     window.addEventListener("keydown", keyDownUp);
     window.addEventListener("keyup", keyDownUp);
 });
+
