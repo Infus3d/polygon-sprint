@@ -79,17 +79,15 @@ Game.World = class {
         this.player.updateAnimation();
     }
 
+    /**
+     * this gives the tile value underneath the player a.k.a tile player is standing on. we can update it so that it checks all around the player
+     */
     getTileValue(){
         //this gets the tile underneath the player
         let a = Math.round(this.player.getCenterX() / 32);
         let b = Math.round(this.player.getBottom() / 32);
 
-        let tileVal = this.map[b * 30 + a]; //30 represents the 30 columns
-
-        if(tileVal == 44 || tileVal == 115 || tileVal == 113){
-            window.location.href = 'GameOver.html';
-        }
-
+        return this.map[b * 30 + a]; //30 represents the 30 columns
     }
 
     collideObject(obj){

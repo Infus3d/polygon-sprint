@@ -96,18 +96,12 @@ window.addEventListener("load", function(event){
             controller.up.active = false;
         }
 
-        game.world.getTileValue();
-        //console.log("width: " + display.buffer.canvas.width + " height: " + display.buffer.canvas.height);
+        //checks if the player touches wate a.k.a loses
+        let tileVal = game.world.getTileValue();
+        if(tileVal == 44 || tileVal == 115 || tileVal == 113){
+            window.location.href = 'GameOver.html';
+        }
 
-        // This is handled in the Game.World class
-        // if (game.world.player.getRight() >= display.getDisplayWidth()) {
-        //     game.world.player.x = 1;
-        //     // renderUpdate(); //will be worked on
-        // }
-        // else if (game.world.player.getLeft() <= 0) {
-        //     game.world.player.x = display.getDisplayWidth() - (game.world.player.width+1);
-        //     //renderUpdate(); //will be worked on
-        // }
         game.update();
         if(game.world.triggeredDoor != undefined){
             runner.stop();
