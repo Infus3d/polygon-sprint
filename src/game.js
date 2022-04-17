@@ -33,10 +33,12 @@ Game.World = class {
         this.height = this.tile_set.tile_size * this.rows;
 
         this.difficulty = null;
+        this.level = undefined;
     }
 
-    setDifficulty(difficulty) {
+    setDifficulty(difficulty, level) {
         this.difficulty = difficulty;
+        this.level = level;
     }
 
     setup(room){
@@ -55,7 +57,7 @@ Game.World = class {
 
         for(let i = room.coins.length-1; i >= 0; i--){
             let curCoin = room.coins[i];
-            this.coins[i] = new Game.Coin((curCoin[0] - 0) * this.tile_set.tile_size, (curCoin[1] - 0) * this.tile_set.tile_size);
+            this.coins.push(new Game.Coin(curCoin[0], curCoin[1], this.tile_set.tile_size));
         }
 
         //-1 is the reserved number -> it indicates that we should keep the position in that axis
@@ -90,6 +92,15 @@ Game.World = class {
             curCoin.animate();
 
             if(curCoin.collideObject(this.player)){
+                // Need to erase the coin from this level to make sure it doesn't reappear again
+                for(let j = this.level[this.room_id]['coins'].length-1; j >= 0; j--){
+                    let tempCoin = this.level[this.room_id]['coins'][j];
+                    if(tempCoin[0] == curCoin.tile_x && tempCoin[1] == curCoin.tile_y){
+                        this.level[this.room_id]['coins'].splice(this.level[this.room_id]['coins'].indexOf(tempCoin), 1);
+                        break;
+                    }
+                }
+
                 this.coins.splice(this.coins.indexOf(curCoin), 1);
                 this.coinCount++; //This is the coin score, need to do something with it
             }
@@ -106,7 +117,7 @@ Game.World = class {
         let a = Math.round(this.player.getCenterX() / 32);
         let b = Math.round(this.player.getBottom() / 32);
 
-        return this.map[b * 30 + a]; //30 represents the 30 columns
+        return this.map[b * this.columns + a]; //30 represents the 30 columns
     }
 
     collideObject(obj){
@@ -378,13 +389,13 @@ Game.World.Object = class {
 /**
  * Very simple class for door objects. Has [x, y] coordinates with width and height.
  * Also the destination coordinates and room id
- * -69 is a reserved number for a tile, it indicates that we should keep the position on that axis
+ * -69 is a reserved number for a tile, it indicates that we should keep the position on that axis :)
  */
  Game.Door = class extends Game.World.Object {
     constructor(door, tile_size = 32){
         super(door.tile_x * tile_size, door.tile_y * tile_size, door.width, door.height);
-        this.destination_x = (door.destination_tile_x == -69) ? -1 : (door.destination_tile_x * tile_size); //if it's a special case (-69) we mark it as -1
-        this.destination_y = (door.destination_tile_y == -69) ? -1 : (door.destination_tile_y * tile_size); //as it's an impossible coordinate for a destination
+        this.destination_x = (door.destination_tile_x == -69) ? -1 : (door.destination_tile_x * tile_size); //if it's a special case (-69) we mark it as -1 since
+        this.destination_y = (door.destination_tile_y == -69) ? -1 : (door.destination_tile_y * tile_size); //it's an impossible coordinate for a destination
         this.destination_room = door.destination_room;
     }
 }
@@ -517,8 +528,10 @@ Game.World.Player = class extends Game.World.AnimatedObject{
 }
 
 Game.Coin = class extends Game.World.AnimatedObject{
-    constructor(x, y){
-        super(Game.Coin.frame_sets["coin-twirl"], 5, "loop", x, y, 45, 48, 31);
+    constructor(tile_x, tile_y, tile_size){
+        super(Game.Coin.frame_sets["coin-twirl"], 5, "loop", tile_x * tile_size, tile_y * tile_size, 30, 32, 31); //30 width, 32 height coins
+        this.tile_x = tile_x;
+        this.tile_y = tile_y;
     }
 
     static frame_sets = {

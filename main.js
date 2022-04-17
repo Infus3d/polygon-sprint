@@ -3,6 +3,7 @@ window.addEventListener("load", function(event){
 
     let difficulty = sessionStorage.getItem('difficulty');
     if(difficulty == undefined) difficulty = "easy";
+    let curLevel = levels[difficulty];
 
     class StuffManager {
         constructor(){
@@ -129,7 +130,7 @@ window.addEventListener("load", function(event){
         game.update();
         if(game.world.triggeredDoor != undefined){
             runner.stop();
-            game.world.setup(levels[difficulty][game.world.triggeredDoor.destination_room]);
+            game.world.setup(curLevel[game.world.triggeredDoor.destination_room]);
             runner.start();
         }
     };
@@ -144,8 +145,8 @@ window.addEventListener("load", function(event){
     let game = new Game();
     let runner = new Runner(1000 / 45, update, renderSpawn);
 
-    game.world.setDifficulty(difficulty);
-    game.world.setup(levels[difficulty]["01"]);
+    game.world.setDifficulty(difficulty, curLevel);
+    game.world.setup(curLevel["01"]);
     display.resize(game.world.width, game.world.height);
 
     /********************* Loading images start **********************/
