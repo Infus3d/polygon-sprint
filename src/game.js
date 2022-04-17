@@ -414,7 +414,7 @@ Game.World.AnimatedObject = class extends Game.World.Object{
         this.counter = 0;
         this.delay = (delay >= 1) ? delay : 1;
         this.frame_set = frame_set;
-        this.frame_index = 0;
+        this.frame_index = Math.floor(Math.random() * frame_set.length);
         this.frame_value = frame_set[0];
         this.mode = mode;
         this.direction_x = 1;
