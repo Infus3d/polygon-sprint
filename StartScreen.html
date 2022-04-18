@@ -21,34 +21,28 @@ the difficulty selection screen>
   }
   .scroll_image
   {
-    background: url('img/backgroundImage.png') repeat-x;
+    background-image: url('img/backgroundImage.png');
     height: 600px;
-    width: 7680px;
-    animation: slide 3s linear infinite;
+    width: 1600px;
+    animation: slide 10s linear infinite;
   }
   .scroll_image_container{
     overflow:  hidden;
   }
   @keyframes slide {
     0% {
-      transform:  translate(0);
+      transform:  translate(0px);
     }
     100% {
-      transform:  translate(-300px);
+      transform:  translate(-200px);
     }
   }
   p{text-align: center;}
-  header{
-    position:  sticky;
-    top:  0;
-    text-align: center;
-  }
 </style>
 </head>
-
-<body>
-  <div class="scroll_image">
+  <body>
     <p style="font-size:72px">POLYGON SPRINT</p>
+  <div class="scroll_image">
   </div>
   <div class="center_start_button">
     <a href="./DifficultySelectScreen.html"><button style="height:75px;width:200px"> Start Game </button></a>
