@@ -175,5 +175,7 @@ window.addEventListener("load", function(event){
 
     window.addEventListener("keydown", keyDownUp);
     window.addEventListener("keyup", keyDownUp);
-});
 
+    //Uncomment for testing
+    //module.exports.StuffManager = StuffManager;
+});
