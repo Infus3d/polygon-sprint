@@ -14,6 +14,25 @@
             -ms-transform: translateY(-50%, -50%);
             transform: translateY(-50%, -50%);
         }
+        .scroll_image
+        {
+            background: url('img/backgroundImage.png') repeat-x;
+            height: 600px;
+            width: 7680px;
+            animation: slide 3s linear infinite;
+        
+        }
+        .scroll_image_container{
+            overflow:  hidden;
+        }
+        @keyframes slide {
+        0% {
+             transform:  translate(0);
+        }
+        100% {
+            transform:  translate(-300px);
+        }
+        }
   
         p{text-align: center;}
 
@@ -21,7 +40,13 @@
 
 
     <body>
+
+        <div class="scroll_image">
+            <p style="font-size: 72px">Game Paused</p>
+        </div>
+
         <p style="font-size:72px">Game Paused</p>
+
         <div class="center_play_button">
             <a href="./index.html"><button style="height:40px;width:200px"> Resume </button></a>
         </div>
