@@ -114,9 +114,8 @@ Game.World = class {
      */
     getTileValue(){
         //this gets the tile underneath the player
-        let a = Math.round(this.player.getCenterX() / 32);
-        let b = Math.round(this.player.getBottom() / 32);
-
+        let a = Math.floor(this.player.getCenterX() / 32);
+        let b = Math.floor(this.player.getBottom() / 32);
         return this.map[b * this.columns + a]; //30 represents the 30 columns
     }
 
@@ -357,31 +356,31 @@ Game.World.Object = class {
         return true;
     }
 
-    getBottom(){ return this.y + this.height; }
+    getBottom(){ return this.y + this.height - 1; }
     getLeft() { return this.x; }
     getTop() { return this.y; }
-    getRight() { return this.x + this.width; }
+    getRight() { return this.x + this.width - 1; }
     getCenterX() { return this.x + this.width * 0.5; }
     getCenterY() { return this.y + this.height * 0.5; }
 
-    getOldBottom() { return this.old_y + this.height; }
+    getOldBottom() { return this.old_y + this.height - 1; }
     getOldLeft() { return this.old_x; }
     getOldTop() { return this.old_y; }
-    getOldRight() { return this.old_x + this.width; }
+    getOldRight() { return this.old_x + this.width - 1; }
     getOldCenterX() { return this.old_x + this.width * 0.5; }
     getOldCenterY() { return this.old_y + this.height * 0.5; }
 
-    setBottom(y) { this.y = y - this.height; }
+    setBottom(y) { this.y = y - this.height + 1; }
     setLeft(x) { this.x = x; }
     setTop(y) { this.y = y; }
-    setRight(x) { this.x = x - this.width; }
+    setRight(x) { this.x = x - this.width + 1; }
     setCenterX(x) { this.x = x - this.width * 0.5; }
     setCenterY(y) { this.y = y - this.height * 0.5; }
 
-    setOldBottom(y) { this.old_y = y - this.height; }
+    setOldBottom(y) { this.old_y = y - this.height + 1; }
     setOldLeft(x) { this.old_x = x; }
     setOldTop(y) { this.old_y = y; }
-    setOldRight(x) { this.old_x = x - this.width; }
+    setOldRight(x) { this.old_x = x - this.width + 1; }
     setOldCenterX(x) { this.old_x = x - this.width * 0.5; }
     setOldCenterY(y) { this.old_y = y - this.height * 0.5; }
 }

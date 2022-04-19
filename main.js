@@ -120,14 +120,14 @@ window.addEventListener("load", function(event){
             game.world.player.jump();
             controller.up.active = false;
         }
+        game.update();
 
         //checks if the player touches wate a.k.a loses
         let tileVal = game.world.getTileValue();
-        if(tileVal == 44 || tileVal == 115 || tileVal == 113){
+        if(tileVal == 44 || tileVal == 115 || tileVal == 103){
             window.location.href = 'GameOver.html';
         }
 
-        game.update();
         if(game.world.triggeredDoor != undefined){
             runner.stop();
             game.world.setup(curLevel[game.world.triggeredDoor.destination_room]);
