@@ -135,7 +135,7 @@ Game.World = class {
             the right side of the object. Collision_value refers to the value of a collision tile in
             the map under the specified row and column occupied by the object.
          */
-        let collision_value, top, right, bottom, left, horMid, verMid;
+        let collision_value, top, right, bottom, left, horMid, verMid, tile_value;
         /**
             testing the top left corner of the object. We get the row and column
             the object occupies in the collision map, then we get the collision_type from the collision map
@@ -147,49 +147,57 @@ Game.World = class {
         top = Math.floor(obj.getTop() / this.tile_set.tile_size);  //this are actually just the
         left = Math.floor(obj.getLeft() / this.tile_set.tile_size); // [x, y] coordinates of the tile
         collision_value = this.collision_map[top * this.columns + left];
-        if(top >= 0 && left >= 0) this.collider.routeCollision(collision_value, obj, left * this.tile_set.tile_size, top * this.tile_set.tile_size, this.tile_set.tile_size);
+        tile_value = this.map[top * this.columns + left];
+        if(top >= 0 && left >= 0) this.collider.routeCollision(tile_value, collision_value, obj, left * this.tile_set.tile_size, top * this.tile_set.tile_size, this.tile_set.tile_size);
 
         top = Math.floor(obj.getTop() / this.tile_set.tile_size);
         right = Math.floor(obj.getRight() / this.tile_set.tile_size);
         collision_value = this.collision_map[top * this.columns + right];
-        if(top >= 0 && right < this.columns) this.collider.routeCollision(collision_value, obj, right * this.tile_set.tile_size, top * this.tile_set.tile_size, this.tile_set.tile_size);
+        tile_value = this.map[top * this.columns + right];
+        if(top >= 0 && right < this.columns) this.collider.routeCollision(tile_value, collision_value, obj, right * this.tile_set.tile_size, top * this.tile_set.tile_size, this.tile_set.tile_size);
 
         bottom = Math.floor(obj.getBottom() / this.tile_set.tile_size);
         left = Math.floor(obj.getLeft() / this.tile_set.tile_size);
         collision_value = this.collision_map[bottom * this.columns + left];
-        if(bottom < this.rows && left >= 0) this.collider.routeCollision(collision_value, obj, left * this.tile_set.tile_size, bottom * this.tile_set.tile_size, this.tile_set.tile_size);
+        tile_value = this.map[bottom * this.columns + left];
+        if(bottom < this.rows && left >= 0) this.collider.routeCollision(tile_value, collision_value, obj, left * this.tile_set.tile_size, bottom * this.tile_set.tile_size, this.tile_set.tile_size);
 
         bottom = Math.floor(obj.getBottom() / this.tile_set.tile_size);
         right = Math.floor(obj.getRight() / this.tile_set.tile_size);
         collision_value = this.collision_map[bottom * this.columns + right];
-        if(right < this.columns && bottom < this.rows) this.collider.routeCollision(collision_value, obj, right * this.tile_set.tile_size, bottom * this.tile_set.tile_size, this.tile_set.tile_size);
+        tile_value = this.map[bottom * this.columns + right];
+        if(right < this.columns && bottom < this.rows) this.collider.routeCollision(tile_value, collision_value, obj, right * this.tile_set.tile_size, bottom * this.tile_set.tile_size, this.tile_set.tile_size);
 
 
         top = Math.floor(obj.getTop() / this.tile_set.tile_size);
         horMid = Math.floor((obj.getLeft() + obj.width * 0.5) / this.tile_set.tile_size);
         collision_value = this.collision_map[top * this.columns + horMid];
-        if(top >= 0) this.collider.routeCollision(collision_value, obj, horMid * this.tile_set.tile_size, top * this.tile_set.tile_size, this.tile_set.tile_size);
+        tile_value = this.map[top * this.columns + horMid];
+        if(top >= 0) this.collider.routeCollision(tile_value, collision_value, obj, horMid * this.tile_set.tile_size, top * this.tile_set.tile_size, this.tile_set.tile_size);
 
         bottom = Math.floor(obj.getBottom() / this.tile_set.tile_size);
         horMid = Math.floor((obj.getLeft() + obj.width * 0.5) / this.tile_set.tile_size);
         collision_value = this.collision_map[bottom * this.columns + horMid];
-        if(bottom < this.rows) this.collider.routeCollision(collision_value, obj, horMid * this.tile_set.tile_size, bottom * this.tile_set.tile_size, this.tile_set.tile_size);
+        tile_value = this.map[bottom * this.columns + horMid];
+        if(bottom < this.rows) this.collider.routeCollision(tile_value, collision_value, obj, horMid * this.tile_set.tile_size, bottom * this.tile_set.tile_size, this.tile_set.tile_size);
 
         verMid = Math.floor((obj.getTop() + obj.height * 0.5) / this.tile_set.tile_size);
         left = Math.floor(obj.getLeft() / this.tile_set.tile_size);
         collision_value = this.collision_map[verMid * this.columns + left];
-        if(left >= 0) this.collider.routeCollision(collision_value, obj, left * this.tile_set.tile_size, verMid * this.tile_set.tile_size, this.tile_set.tile_size);
+        tile_value = this.map[verMid * this.columns + left];
+        if(left >= 0) this.collider.routeCollision(tile_value, collision_value, obj, left * this.tile_set.tile_size, verMid * this.tile_set.tile_size, this.tile_set.tile_size);
 
         verMid = Math.floor((obj.getTop() + obj.height * 0.5) / this.tile_set.tile_size);
         right = Math.floor(obj.getRight() / this.tile_set.tile_size);
         collision_value = this.collision_map[verMid * this.columns + right];
-        if(right < this.columns) this.collider.routeCollision(collision_value, obj, right * this.tile_set.tile_size, verMid * this.tile_set.tile_size, this.tile_set.tile_size);
+        tile_value = this.map[verMid * this.columns + right];
+        if(right < this.columns) this.collider.routeCollision(tile_value, collision_value, obj, right * this.tile_set.tile_size, verMid * this.tile_set.tile_size, this.tile_set.tile_size);
     }
 }
 
 Game.Collider = class {
     constructor(){
-        this.routeCollision = function(value, object, tile_x, tile_y, tile_size){
+        this.routeCollision = function(tile_value, value, object, tile_x, tile_y, tile_size){
             
             switch(value) { // which value does our tile have?
 
@@ -200,44 +208,46 @@ Game.Collider = class {
                     If there is a wall on that side, the bit is set 1, and 0 if there is not a wall.
                 */
         
-                case  1: this.collidePlatformTop      (object, tile_y            ); break;
-                case  2: this.collidePlatformRight    (object, tile_x + tile_size); break;
-                case  3: if (this.collidePlatformTop  (object, tile_y            )) return; // If there's a collision, we don't need to check for anything else.
-                        this.collidePlatformRight    (object, tile_x + tile_size); break;
-                case  4: this.collidePlatformBottom   (object, tile_y + tile_size); break;
-                case  5: if (this.collidePlatformTop  (object, tile_y            )) return;
-                        this.collidePlatformBottom   (object, tile_y + tile_size); break;
-                case  6: if (this.collidePlatformRight(object, tile_x + tile_size)) return;
-                        this.collidePlatformBottom   (object, tile_y + tile_size); break;
-                case  7: if (this.collidePlatformTop  (object, tile_y            )) return;
-                        if (this.collidePlatformRight(object, tile_x + tile_size)) return;
-                        this.collidePlatformBottom   (object, tile_y + tile_size); break;
-                case  8: this.collidePlatformLeft     (object, tile_x            ); break;
-                case  9: if (this.collidePlatformTop  (object, tile_y            )) return;
-                        this.collidePlatformLeft     (object, tile_x            ); break;
-                case 10: if (this.collidePlatformLeft (object, tile_x            )) return;
-                        this.collidePlatformRight    (object, tile_x + tile_size); break;
-                case 11: if (this.collidePlatformTop  (object, tile_y            )) return;
-                        if (this.collidePlatformLeft (object, tile_x            )) return;
-                        this.collidePlatformRight    (object, tile_x + tile_size); break;
-                case 12: if (this.collidePlatformLeft (object, tile_x            )) return;
-                        this.collidePlatformBottom   (object, tile_y + tile_size); break;
-                case 13: if (this.collidePlatformTop  (object, tile_y            )) return;
-                        if (this.collidePlatformLeft (object, tile_x            )) return;
-                        this.collidePlatformBottom   (object, tile_y + tile_size); break;
-                case 14: if (this.collidePlatformLeft (object, tile_x            )) return;
-                        if (this.collidePlatformRight(object, tile_x            )) return;
-                        this.collidePlatformBottom   (object, tile_y + tile_size); break;
-                case 15: if (this.collidePlatformTop  (object, tile_y            )) return;
-                        if (this.collidePlatformLeft (object, tile_x            )) return;
-                        if (this.collidePlatformRight(object, tile_x + tile_size)) return;
-                        this.collidePlatformBottom   (object, tile_y + tile_size); break;
+                case  1: this.collidePlatformTop      (tile_value, object, tile_y, tile_size); break;
+                case  2: this.collidePlatformRight    (tile_value, object, tile_x, tile_size); break;
+                case  3: if (this.collidePlatformTop  (tile_value, object, tile_y, tile_size)) return; // If there's a collision, we don't need to check for anything else.
+                        this.collidePlatformRight    (tile_value, object, tile_x, tile_size); break;
+                case  4: this.collidePlatformBottom   (tile_value, object, tile_y, tile_size); break;
+                case  5: if (this.collidePlatformTop  (tile_value, object, tile_y, tile_size)) return;
+                        this.collidePlatformBottom   (tile_value, object, tile_y, tile_size); break;
+                case  6: if (this.collidePlatformRight(tile_value, object, tile_x, tile_size)) return;
+                        this.collidePlatformBottom   (tile_value, object, tile_y, tile_size); break;
+                case  7: if (this.collidePlatformTop  (tile_value, object, tile_y, tile_size)) return;
+                        if (this.collidePlatformRight(tile_value, object, tile_x, tile_size)) return;
+                        this.collidePlatformBottom   (tile_value, object, tile_y, tile_size); break;
+                case  8: this.collidePlatformLeft     (tile_value, object, tile_x, tile_size); break;
+                case  9: if (this.collidePlatformTop  (tile_value, object, tile_y, tile_size)) return;
+                        this.collidePlatformLeft     (tile_value, object, tile_x, tile_size); break;
+                case 10: if (this.collidePlatformLeft (tile_value, object, tile_x, tile_size)) return;
+                        this.collidePlatformRight    (tile_value, object, tile_x, tile_size); break;
+                case 11: if (this.collidePlatformTop  (tile_value, object, tile_y, tile_size)) return;
+                        if (this.collidePlatformLeft (tile_value, object, tile_x, tile_size)) return;
+                        this.collidePlatformRight    (tile_value, object, tile_x, tile_size); break;
+                case 12: if (this.collidePlatformLeft (tile_value, object, tile_x, tile_size)) return;
+                        this.collidePlatformBottom   (tile_value, object, tile_y, tile_size); break;
+                case 13: if (this.collidePlatformTop  (tile_value, object, tile_y, tile_size)) return;
+                        if (this.collidePlatformLeft (tile_value, object, tile_x, tile_size)) return;
+                        this.collidePlatformBottom   (tile_value, object, tile_y, tile_size); break;
+                case 14: if (this.collidePlatformLeft (tile_value, object, tile_x, tile_size)) return;
+                        if (this.collidePlatformRight(tile_value, object, tile_x, tile_size)) return;
+                        this.collidePlatformBottom   (tile_value, object, tile_y, tile_size); break;
+                case 15: if (this.collidePlatformTop  (tile_value, object, tile_y, tile_size)) return;
+                        if (this.collidePlatformLeft (tile_value, object, tile_x, tile_size)) return;
+                        if (this.collidePlatformRight(tile_value, object, tile_x, tile_size)) return;
+                        this.collidePlatformBottom   (tile_value, object, tile_y, tile_size); break;
         
             }
         };
     }
     
-    collidePlatformTop(object, tile_top) {
+    collidePlatformTop(tile_value, object, tile_y, tile_size) {
+        let tile_top = tile_y;
+        if(tile_value == 125) tile_top = tile_y + tile_size * 0.6;
         if (object.getBottom() > tile_top && object.getOldBottom() <= tile_top) {
             object.setBottom(tile_top - 1);
             object.velocity_y = 0;
@@ -247,8 +257,8 @@ Game.Collider = class {
         return false;
     }
 
-    collidePlatformRight(object, tile_right) {
-    
+    collidePlatformRight(tile_value, object, tile_x, tile_size) {
+        let tile_right = tile_x + tile_size;
         if (object.getLeft() < tile_right && object.getOldLeft() >= tile_right) {
     
           object.setLeft(tile_right);
@@ -259,8 +269,8 @@ Game.Collider = class {
     
     }
     
-    collidePlatformBottom(object, tile_bottom) {
-
+    collidePlatformBottom(tile_value, object, tile_y, tile_size) {
+        let tile_bottom = tile_y + tile_size;
         /* If the top of the object is above the bottom of the tile and on the previous
         frame the top of the object was below the bottom of the tile, we have entered into
         this tile. Pretty simple stuff. */
@@ -275,8 +285,8 @@ Game.Collider = class {
     
     }
 
-    collidePlatformLeft(object, tile_left) {
-
+    collidePlatformLeft(tile_value, object, tile_x, tile_size) {
+        let tile_left = tile_x;
         if (object.getRight() > tile_left && object.getOldRight() <= tile_left) {
             document.getElementById("ppp").innerHTML = "collidePlatformLeft " + object.getRight() + " | " + tile_left + " | " + object.getOldRight(); 
           object.setRight(tile_left - 1); // -0.01 is to fix a small problem with rounding, I think -1 also works, and is a lot more convenient but need to test
