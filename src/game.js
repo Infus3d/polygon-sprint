@@ -16,7 +16,9 @@ Game.World = class {
         this.rows = 20;
 
         this.tile_set = new Game.World.TileSet(32);
-        this.player = new Game.World.Player(40, 300);
+        let colOffset = new Object();
+        colOffset.left = 6, colOffset.right = 6, colOffset.top = 3, colOffset.bottom = 3;
+        this.player = new Game.World.Player(40, 300, colOffset);
         this.collider = new Game.Collider();
 
         this.room_id = "01";
@@ -60,22 +62,30 @@ Game.World = class {
 
         for(let i = room.doors.length-1; i >= 0; i--){
             let curDoor = room.doors[i];
-            this.doors[i] = new Game.Door(curDoor, this.tile_set.tile_size);
+            let colOffset = [];
+            colOffset.left = 0, colOffset.right = 0, colOffset.top = 0, colOffset.bottom = 0;
+            this.doors[i] = new Game.Door(curDoor, this.tile_set.tile_size, colOffset);
         }
 
         for(let i = room.coins.length-1; i >= 0; i--){
             let curCoin = room.coins[i];
-            this.coins.push(new Game.Coin(curCoin[0], curCoin[1], this.tile_set.tile_size));
+            let colOffset = [];
+            colOffset.left = 0, colOffset.right = 0, colOffset.top = 0, colOffset.bottom = 0;
+            this.coins.push(new Game.Coin(curCoin[0], curCoin[1], this.tile_set.tile_size, colOffset));
         }
 
         for(let i = room.flies.length-1; i >= 0; i--){
             let curFly = room.flies[i];
-            this.flies.push(new Game.Fly(curFly.start_x, curFly.start_y, curFly.end_x, curFly.end_y));
+            let colOffset = [];
+            colOffset.left = 15, colOffset.right = 15, colOffset.top = 4, colOffset.bottom = 2;
+            this.flies.push(new Game.Fly(curFly.start_x, curFly.start_y, curFly.end_x, curFly.end_y, colOffset));
         }
 
         for(let i = room.slimes.length-1; i >= 0; i--){
             let curSlime = room.slimes[i];
-            this.slimes.push(new Game.Slime(curSlime.start_x, curSlime.start_y, curSlime.end_x, curSlime.end_y));
+            let colOffset = [];
+            colOffset.left = 3, colOffset.right = 3, colOffset.top = 2, colOffset.bottom = 0;
+            this.slimes.push(new Game.Slime(curSlime.start_x, curSlime.start_y, curSlime.end_x, curSlime.end_y, colOffset));
         }
 
         //-1 is the reserved number -> it indicates that we should keep the position in that axis
@@ -387,13 +397,14 @@ Game.Collider = class {
 //Any object in this world is treated like a rectangle
 //with [x, y] top-left coordinates and [width, height] sizes
 Game.World.Object = class {
-    constructor(x = 0, y = 0, width = 0, height = 0, velocity_max = 31){
+    constructor(x = 0, y = 0, width = 0, height = 0, velocity_max = 31, collision_offset = undefined){
         this.x = x;
         this.y = y;
         this.old_x = x;
         this.old_y = y;
         this.width = width;
         this.height = height;
+        this.collision_offset = collision_offset;
 
         this.jumping = false;
         this.velocity_max = this.velocity_max;
@@ -403,10 +414,10 @@ Game.World.Object = class {
     }
 
     collideObject(object){
-        if(this.getRight() < object.getLeft() ||
-            this.getBottom() < object.getTop() ||
-            this.getLeft() > object.getRight() ||
-            this.getTop() > object.getBottom()) return false;
+        if(this.getRight(1) < object.getLeft(1) ||
+            this.getBottom(1) < object.getTop(1) ||
+            this.getLeft(1) > object.getRight(1) ||
+            this.getTop(1) > object.getBottom(1)) return false;
         
         return true;
     }
@@ -418,17 +429,17 @@ Game.World.Object = class {
         return true;
     }
 
-    getBottom(){ return this.y + this.height - 1; }
-    getLeft() { return this.x; }
-    getTop() { return this.y; }
-    getRight() { return this.x + this.width - 1; }
+    getBottom(enable = 0){ return this.y + this.height - 1 - this.collision_offset.bottom * enable; }
+    getLeft(enable = 0) { return this.x + this.collision_offset.left * enable; }
+    getTop(enable = 0) { return this.y + this.collision_offset.top * enable ; }
+    getRight(enable = 0) { return this.x + this.width - 1 - this.collision_offset.right * enable; }
     getCenterX() { return this.x + this.width * 0.5; }
     getCenterY() { return this.y + this.height * 0.5; }
 
-    getOldBottom() { return this.old_y + this.height - 1; }
-    getOldLeft() { return this.old_x; }
-    getOldTop() { return this.old_y; }
-    getOldRight() { return this.old_x + this.width - 1; }
+    getOldBottom(enable = 0) { return this.old_y + this.height - 1 - this.collision_offset.bottom * enable; }
+    getOldLeft(enable = 0) { return this.old_x + this.collision_offset.left * enable; }
+    getOldTop(enable = 0) { return this.old_y + this.collision_offset.top * enable; }
+    getOldRight(enable = 0) { return this.old_x + this.width - 1 - this.collision_offset.right * enable; }
     getOldCenterX() { return this.old_x + this.width * 0.5; }
     getOldCenterY() { return this.old_y + this.height * 0.5; }
 
@@ -453,8 +464,8 @@ Game.World.Object = class {
  * -69 is a reserved number for a tile, it indicates that we should keep the position on that axis :)
  */
  Game.Door = class extends Game.World.Object {
-    constructor(door, tile_size = 32){
-        super(door.tile_x * tile_size, door.tile_y * tile_size, door.width, door.height);
+    constructor(door, tile_size = 32, collision_offset = undefined){
+        super(door.tile_x * tile_size, door.tile_y * tile_size, door.width, door.height, 0, collision_offset);
         this.destination_x = (door.destination_tile_x == -69) ? -1 : (door.destination_tile_x * tile_size); //if it's a special case (-69) we mark it as -1 since
         this.destination_y = (door.destination_tile_y == -69) ? -1 : (door.destination_tile_y * tile_size); //it's an impossible coordinate for a destination
         this.destination_room = door.destination_room;
@@ -469,8 +480,8 @@ Game.World.Object = class {
  * mode for now has two states 'loop' (for animated states like moving) and 'pause' (for not animated states like standing idle)
  */
 Game.World.AnimatedObject = class extends Game.World.Object{
-    constructor(frame_set, delay, mode = "loop", x, y, width = 0, height = 0, velocity_max = 31){
-        super(x, y, width, height, velocity_max);
+    constructor(frame_set, delay, mode = "loop", x, y, width = 0, height = 0, velocity_max = 31, collision_offset = undefined){
+        super(x, y, width, height, velocity_max, collision_offset);
 
         this.counter = 0;
         this.delay = (delay >= 1) ? delay : 1;
@@ -514,8 +525,8 @@ Game.World.AnimatedObject = class extends Game.World.Object{
 // Simple Player class, the variables and method names should be slef-explanatory
 // update functin is called every time the canvas screen is updated
 Game.World.Player = class extends Game.World.AnimatedObject{
-    constructor(x, y){
-        super(Game.World.Player.frame_sets["idle-right"], 5, "loop", x, y, 35, 50, 31); //should be [width, height] = [40, 54] but setting it smaller makes it collide better
+    constructor(x, y, collision_offset = undefined){
+        super(Game.World.Player.frame_sets["idle-right"], 5, "loop", x, y, 35, 50, 31, collision_offset); //should be [width, height] = [40, 54] but setting it smaller makes it collide better
         this.jumping = true;
         this.color = "#000000";
         this.direction_x = 1;
@@ -589,8 +600,8 @@ Game.World.Player = class extends Game.World.AnimatedObject{
 }
 
 Game.Coin = class extends Game.World.AnimatedObject{
-    constructor(tile_x, tile_y, tile_size){
-        super(Game.Coin.frame_sets["coin-twirl"], 5, "loop", tile_x * tile_size, tile_y * tile_size, 30, 32, 31); //30 width, 32 height coins
+    constructor(tile_x, tile_y, tile_size, collision_offset = undefined){
+        super(Game.Coin.frame_sets["coin-twirl"], 5, "loop", tile_x * tile_size, tile_y * tile_size, 30, 32, 31, collision_offset); //30 width, 32 height coins
         this.tile_x = tile_x;
         this.tile_y = tile_y;
     }
@@ -601,8 +612,8 @@ Game.Coin = class extends Game.World.AnimatedObject{
 }
 
 Game.Fly = class extends Game.World.AnimatedObject{
-    constructor(start_x, start_y, end_x, end_y){
-        super(Game.Fly.frame_sets['fly-left'], 10, "loop", (start_x + end_x)/2, (start_y + end_y)/2, 62, 27, 31);
+    constructor(start_x, start_y, end_x, end_y, collision_offset = undefined){
+        super(Game.Fly.frame_sets['fly-left'], 10, "loop", (start_x + end_x)/2, (start_y + end_y)/2, 62, 27, 31, collision_offset);
         this.start_x = start_x;
         this.start_y = start_y;
         this.end_x = end_x;
@@ -647,8 +658,8 @@ Game.Fly = class extends Game.World.AnimatedObject{
 }
 
 Game.Slime = class extends Game.World.AnimatedObject{
-    constructor(start_x, start_y, end_x, end_y){
-        super(Game.Slime.frame_sets['slither-left'], 15, "loop", (start_x + end_x)/2, (start_y + end_y)/2, 51, 28, 31);
+    constructor(start_x, start_y, end_x, end_y, collision_offset = undefined){
+        super(Game.Slime.frame_sets['slither-left'], 15, "loop", (start_x + end_x)/2, (start_y + end_y)/2, 51, 28, 31, collision_offset);
         this.start_x = start_x;
         this.start_y = start_y;
         this.end_x = end_x;
