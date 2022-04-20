@@ -54,39 +54,6 @@ window.addEventListener("load", function(event){
             this.sortImageSet(this.coinImages);
             this.sortImageSet(this.flyImages);
             this.sortImageSet(this.slimeImages);
-            // for(let i=1; i<this.playerImages.length; i++){
-            //     let cur = i;
-            //     while(cur > 0){
-            //         let curLen = this.playerImages[cur].currentSrc.length;
-            //         let prevLen = this.playerImages[cur-1].currentSrc.length;
-
-            //         let curInt = parseInt(this.playerImages[cur].currentSrc.substring(curLen-6, curLen-4));
-            //         let prevInt = parseInt(this.playerImages[cur-1].currentSrc.substring(prevLen-6, prevLen-4));
-            //         if(curInt >= prevInt) break;
-                    
-            //         let temp = this.playerImages[cur];
-            //         this.playerImages[cur] = this.playerImages[cur-1];
-            //         this.playerImages[cur-1] = temp;
-            //         cur--;
-            //     }
-            // }
-
-            // for(let i=1; i<this.coinImages.length; i++){
-            //     let cur = i;
-            //     while(cur > 0){
-            //         let curLen = this.coinImages[cur].currentSrc.length;
-            //         let prevLen = this.coinImages[cur-1].currentSrc.length;
-
-            //         let curInt = parseInt(this.coinImages[cur].currentSrc.substring(curLen-6, curLen-4));
-            //         let prevInt = parseInt(this.coinImages[cur-1].currentSrc.substring(prevLen-6, prevLen-4));
-            //         if(curInt >= prevInt) break;
-                    
-            //         let temp = this.coinImages[cur];
-            //         this.coinImages[cur] = this.coinImages[cur-1];
-            //         this.coinImages[cur-1] = temp;
-            //         cur--;
-            //     }
-            // }
         }
         
         sortImageSet(images){
