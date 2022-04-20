@@ -15,12 +15,16 @@ window.addEventListener("load", function(event){
             this.backgroundImage = undefined;
             this.playerImages = [];
             this.coinImages = [];
+            this.flyImages = [];
+            this.slimeImages = [];
         }
         
         //current count of loaded images
         static totalLoadCount = 0;
+        
         //the threshold the counts need to reach before initiating the game with runner.start()
-        static loadThreshold = 2 + 12 + 12 + 8; //1 background, 1 tilesheet, 12 player_right, 12 player_left, 8 coin images
+        //1 background, 1 tilesheet, 12 player_right, 12 player_left, 8 coin images, 4 fly images, 4 slime images
+        static loadThreshold = 2 + 12 + 12 + 8 + 4 + 4;
 
         /**
          * Used to load an image.
@@ -46,43 +50,66 @@ window.addEventListener("load", function(event){
          * order in ex. 'img/player' directory.
          */
         sortAllImages(){
-            for(let i=1; i<this.playerImages.length; i++){
+            this.sortImageSet(this.playerImages);
+            this.sortImageSet(this.coinImages);
+            this.sortImageSet(this.flyImages);
+            this.sortImageSet(this.slimeImages);
+            // for(let i=1; i<this.playerImages.length; i++){
+            //     let cur = i;
+            //     while(cur > 0){
+            //         let curLen = this.playerImages[cur].currentSrc.length;
+            //         let prevLen = this.playerImages[cur-1].currentSrc.length;
+
+            //         let curInt = parseInt(this.playerImages[cur].currentSrc.substring(curLen-6, curLen-4));
+            //         let prevInt = parseInt(this.playerImages[cur-1].currentSrc.substring(prevLen-6, prevLen-4));
+            //         if(curInt >= prevInt) break;
+                    
+            //         let temp = this.playerImages[cur];
+            //         this.playerImages[cur] = this.playerImages[cur-1];
+            //         this.playerImages[cur-1] = temp;
+            //         cur--;
+            //     }
+            // }
+
+            // for(let i=1; i<this.coinImages.length; i++){
+            //     let cur = i;
+            //     while(cur > 0){
+            //         let curLen = this.coinImages[cur].currentSrc.length;
+            //         let prevLen = this.coinImages[cur-1].currentSrc.length;
+
+            //         let curInt = parseInt(this.coinImages[cur].currentSrc.substring(curLen-6, curLen-4));
+            //         let prevInt = parseInt(this.coinImages[cur-1].currentSrc.substring(prevLen-6, prevLen-4));
+            //         if(curInt >= prevInt) break;
+                    
+            //         let temp = this.coinImages[cur];
+            //         this.coinImages[cur] = this.coinImages[cur-1];
+            //         this.coinImages[cur-1] = temp;
+            //         cur--;
+            //     }
+            // }
+        }
+        
+        sortImageSet(images){
+            for(let i=1; i<images.length; i++){
                 let cur = i;
                 while(cur > 0){
-                    let curLen = this.playerImages[cur].currentSrc.length;
-                    let prevLen = this.playerImages[cur-1].currentSrc.length;
+                    let curLen = images[cur].currentSrc.length;
+                    let prevLen = images[cur-1].currentSrc.length;
 
-                    let curInt = parseInt(this.playerImages[cur].currentSrc.substring(curLen-6, curLen-4));
-                    let prevInt = parseInt(this.playerImages[cur-1].currentSrc.substring(prevLen-6, prevLen-4));
+                    let curInt = parseInt(images[cur].currentSrc.substring(curLen-6, curLen-4));
+                    let prevInt = parseInt(images[cur-1].currentSrc.substring(prevLen-6, prevLen-4));
                     if(curInt >= prevInt) break;
                     
-                    let temp = this.playerImages[cur];
-                    this.playerImages[cur] = this.playerImages[cur-1];
-                    this.playerImages[cur-1] = temp;
-                    cur--;
-                }
-            }
-
-            for(let i=1; i<this.coinImages.length; i++){
-                let cur = i;
-                while(cur > 0){
-                    let curLen = this.coinImages[cur].currentSrc.length;
-                    let prevLen = this.coinImages[cur-1].currentSrc.length;
-
-                    let curInt = parseInt(this.coinImages[cur].currentSrc.substring(curLen-6, curLen-4));
-                    let prevInt = parseInt(this.coinImages[cur-1].currentSrc.substring(prevLen-6, prevLen-4));
-                    if(curInt >= prevInt) break;
-                    
-                    let temp = this.coinImages[cur];
-                    this.coinImages[cur] = this.coinImages[cur-1];
-                    this.coinImages[cur-1] = temp;
+                    let temp = images[cur];
+                    images[cur] = images[cur-1];
+                    images[cur-1] = temp;
                     cur--;
                 }
             }
         }
     }
 
-    let renderSpawn = function(){
+    let render = function(){
         // display.clearCanvas();
         display.drawBackground(stuffManager.backgroundImage);
         display.drawMap(stuffManager.tileSheetImage, stuffManager.tileSheet_columns, stuffManager.tileSheet_tile_size, stuffManager.tileSheet_spacing,
@@ -94,20 +121,19 @@ window.addEventListener("load", function(event){
             display.drawObject(stuffManager.coinImages[coin.frame_value], -1, -1, -1, -1, coin.x, coin.y, 30, 32);
         }
 
+        for(let i = game.world.flies.length-1; i >= 0; i--){
+            let fly = game.world.flies[i];
+            display.drawObject(stuffManager.flyImages[fly.frame_value], -1, -1, -1, -1, fly.x, fly.y, fly.width, fly.height);
+        }
+
+        for(let i = game.world.slimes.length-1; i >= 0; i--){
+            let slime = game.world.slimes[i];
+            display.drawObject(stuffManager.slimeImages[slime.frame_value], -1, -1, -1, -1, slime.x + slime.offset_x, slime.y + slime.offset_y, slime.width, slime.height);
+        }
+
         display.drawObject(stuffManager.playerImages[game.world.player.frame_value], -1, -1, -1, -1, game.world.player.x, game.world.player.y, 40, 54);
         display.render();
     };
-
-    //TODO add a function that adds a new map/tilesheet. for now i just used the same tilemap
-    // let renderUpdate = function () {
-    //     display.clearCanvas();
-    //     display.drawBackground(stuffManager.backgroundImage);
-    //     display.drawMap(stuffManager.tileSheetImage, stuffManager.tileSheet_columns, stuffManager.tileSheet_tile_size, stuffManager.tileSheet_spacing,
-    //         game.world.map, game.world.columns, game.world.tile_set.tile_size);
-    //     //display.drawPlayer(game.world.player, game.world.player.color);
-    //     display.drawObject(stuffManager.playerImages[game.world.player.frame_value], -1, -1, -1, -1, game.world.player.x, game.world.player.y, 40, 54);
-    //     display.render();
-    // };
 
     let update = function(){
         if (controller.left.active == true) {
@@ -143,7 +169,7 @@ window.addEventListener("load", function(event){
     let controller      = new Controller();
     let display         = new Display(document.getElementById("gameCanvas"));
     let game = new Game();
-    let runner = new Runner(1000 / 45, update, renderSpawn);
+    let runner = new Runner(1000 / 45, update, render);
 
     game.world.setDifficulty(difficulty, curLevel);
     game.world.setup(curLevel["01"]);
@@ -169,6 +195,18 @@ window.addEventListener("load", function(event){
     for(let i=1; i<=8; i++){
         stuffManager.requestImage("img/coins/coin_0" + i + ".png", (image) => {
             stuffManager.coinImages.push(image);
+        });
+    }
+
+    for(let i=1; i<=4; i++){
+        stuffManager.requestImage("img/enemies/fly/fly0" + i + ".png", (image) => {
+            stuffManager.flyImages.push(image);
+        });
+    }
+
+    for(let i=1; i<=4; i++){
+        stuffManager.requestImage("img/enemies/slime/slime0" + i + ".png", (image) => {
+            stuffManager.slimeImages.push(image);
         });
     }
     /*********************** Loading images end *********************/

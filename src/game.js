@@ -29,6 +29,9 @@ Game.World = class {
         this.coins = [];
         this.coinCount = 0;
 
+        this.flies = [];
+        this.slimes = [];
+
         this.width = this.tile_set.tile_size * this.columns;
         this.height = this.tile_set.tile_size * this.rows;
 
@@ -44,6 +47,9 @@ Game.World = class {
     setup(room){
         this.doors = [];
         this.coins = [];
+        this.flies = [];
+        this.slimes = [];
+
         this.map = room.map;
         this.collision_map = Game.Collider.getCollisionMap(this.map);
         this.columns = room.columns;
@@ -58,6 +64,16 @@ Game.World = class {
         for(let i = room.coins.length-1; i >= 0; i--){
             let curCoin = room.coins[i];
             this.coins.push(new Game.Coin(curCoin[0], curCoin[1], this.tile_set.tile_size));
+        }
+
+        for(let i = room.flies.length-1; i >= 0; i--){
+            let curFly = room.flies[i];
+            this.flies.push(new Game.Fly(curFly.start_x, curFly.start_y, curFly.end_x, curFly.end_y));
+        }
+
+        for(let i = room.slimes.length-1; i >= 0; i--){
+            let curSlime = room.slimes[i];
+            this.slimes.push(new Game.Slime(curSlime.start_x, curSlime.start_y, curSlime.end_x, curSlime.end_y));
         }
 
         //-1 is the reserved number -> it indicates that we should keep the position in that axis
@@ -104,6 +120,18 @@ Game.World = class {
                 this.coins.splice(this.coins.indexOf(curCoin), 1);
                 this.coinCount++; //This is the coin score, need to do something with it
             }
+        }
+
+        for(let i = this.flies.length-1; i >= 0; i--){
+            let curFly = this.flies[i];
+            curFly.updatePosition();
+            curFly.animate();
+        }
+
+        for(let i = this.slimes.length-1; i >= 0; i--){
+            let curSlime = this.slimes[i];
+            curSlime.updatePosition();
+            curSlime.animate();
         }
 
         this.player.updateAnimation();
@@ -338,8 +366,6 @@ Game.Collider = class {
             //     default : col_map.push(0);
             // }
         }
-
-        console.log("called " + col_map);
         return col_map;
     }
 
@@ -562,6 +588,100 @@ Game.Coin = class extends Game.World.AnimatedObject{
 
     static frame_sets = {
         "coin-twirl" : [0, 1, 2, 3, 4, 5, 6, 7]
+    }
+}
+
+Game.Fly = class extends Game.World.AnimatedObject{
+    constructor(start_x, start_y, end_x, end_y){
+        super(Game.Fly.frame_sets['fly-left'], 10, "loop", (start_x + end_x)/2, (start_y + end_y)/2, 62, 27, 31);
+        this.start_x = start_x;
+        this.start_y = start_y;
+        this.end_x = end_x;
+        this.end_y = end_y;
+
+        this.dx = Math.abs(end_x - start_x) / 2;
+        this.dy = Math.abs(end_y - start_y) / 2;
+
+        this.base_x = (start_x + end_x) / 2;
+        this.base_y = (start_y + end_y) / 2;
+
+        this.position_x = Math.random() * Math.PI;
+        this.position_y = Math.random() * Math.PI;
+
+        this.direction_x = -1;
+    }
+
+    static frame_sets = {
+        "fly-left" : [0, 1],
+        "fly-right" : [2, 3]
+    }
+
+    updatePosition(){
+        this.position_x += 0.03;
+        this.position_y += 0.03;
+        
+        this.old_x = this.x;
+        this.old_y = this.y;
+
+        this.x = this.base_x + Math.cos(this.position_x) * this.dx;
+        this.y = this.base_y + Math.cos(this.position_y) * this.dy;
+
+        if(this.old_x < this.x && this.direction_x < 0){
+            this.changeFrameSet(Game.Fly.frame_sets['fly-right'], "loop", 10);
+            this.direction_x = 1;
+        }
+        else if(this.x < this.old_x && this.direction_x > 0){
+            this.changeFrameSet(Game.Fly.frame_sets['fly-left'], "loop", 10);
+            this.direction_x = -1;
+        }
+    }
+}
+
+Game.Slime = class extends Game.World.AnimatedObject{
+    constructor(start_x, start_y, end_x, end_y){
+        super(Game.Slime.frame_sets['slither-left'], 15, "loop", (start_x + end_x)/2, (start_y + end_y)/2, 51, 28, 31);
+        this.start_x = start_x;
+        this.start_y = start_y;
+        this.end_x = end_x;
+        this.end_y = end_y;
+        this.offset_x = 0;
+        this.offset_y = 5;
+
+        this.dx = Math.abs(end_x - start_x) / 2;
+        this.dy = Math.abs(end_y - start_y) / 2;
+
+        this.base_x = (start_x + end_x) / 2;
+        this.base_y = (start_y + end_y) / 2;
+
+        this.position_x = Math.random() * Math.PI;
+        this.position_y = Math.random() * Math.PI;
+
+        this.direction_x = -1;
+    }
+
+    static frame_sets = {
+        "slither-left" : [0, 1],
+        "slither-right" : [2, 3]
+    }
+
+    updatePosition(){
+        this.position_x += 0.02;
+        this.position_y += 0.02;
+        
+        this.old_x = this.x;
+        this.old_y = this.y;
+
+        this.x = this.base_x + Math.cos(this.position_x) * this.dx;
+        this.y = this.base_y + Math.cos(this.position_y) * this.dy;
+
+        if(this.old_x < this.x && this.direction_x < 0){
+            this.changeFrameSet(Game.Slime.frame_sets['slither-right'], "loop", 15);
+            this.direction_x = 1;
+        }
+        else if(this.x < this.old_x && this.direction_x > 0){
+            this.changeFrameSet(Game.Slime.frame_sets['slither-left'], "loop", 15);
+            this.direction_x = -1;
+        }
     }
 }
 
