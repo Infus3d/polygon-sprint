@@ -16,7 +16,7 @@ Game.World = class {
         this.rows = 20;
 
         this.tile_set = new Game.World.TileSet(32);
-        this.player = new Game.World.Player(40, 300);
+        this.player = new Game.World.Player(40, 40);
         this.collider = new Game.Collider();
 
         this.room_id = "01";
