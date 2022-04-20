@@ -287,32 +287,49 @@ Game.Collider = class {
     
     }
 
+    static spriteSheetCollisionValues = [0, 0, 1, 15, 15, 15, 0, 0, 15, 15, 15, 15,
+                                         0, 0, 1, 0, 15, 15, 0, 0, 15, 0, 15, 15,
+                                         0, 0, 1, 15, 15, 15, 15, 15, 0, 15, 0, 15, 15,
+                                         0, 0, 15, 15, 0, 1, 15, 0, 1, 0, 1, 15,
+                                         0, 15, 15, 15, 0, 1, 0, 15, 1, 0, 1, 15,
+                                         0, 15, 15, 15, 0, 1, 0, 15, 1, 0, 1, 1,
+                                         0, 15, 15, 1, 0, 1, 0, 15, 1, 0, 1, 15,
+                                         0, 15, 15, 1, 15, 15, 0, 15, 15, 15, 15, 15,
+                                         0, 0, 15, 1, 15, 15, 0, 15, 15, 15, 15, 15,
+                                         0, 0, 15, 1, 15, 15, 0, 15, 15, 1, 15, 1,
+                                         0, 15, 15, 15, 1, 15, 1, 15, 15, 15, 15, 0,
+                                         0, 15, 15, 15, 15, 15, 0, 15, 15, 15, 15, 0,
+                                         0, 1, 15, 15, 15, 0, 0, 15, 15, 15, 15, 0];
+
     // Need to find a better way to find the collision map, atm doing it manually :(
     static getCollisionMap(map){
         let col_map = [];
         for(let i = 0; i < map.length; i++){
-            switch(map[i]){
-                case 44 : col_map.push(0); break;
-                //case 44:  window.location.href = 'GameOver.html';
-                case 45 : col_map.push(1); break;
-                case 57 : col_map.push(1); break;
-                case 69 : col_map.push(1); break;
-                case 81 : col_map.push(1); break;
-                case 92 : col_map.push(15); break;
-                case 93 : col_map.push(15); break;
-                case 104 : col_map.push(15); break;
-                case 105 : col_map.push(15); break;
-                case 103 : col_map.push(0); break;
-                case 115 : col_map.push(0); break;
-                case 116 : col_map.push(15); break;
-                case 117 : col_map.push(15); break;
-                case 129 : col_map.push(15); break;
-                case 133 : col_map.push(0); break; //this is the box, set to 15 if you want it to be solid
-                case 153 : col_map.push(15); break; //this is the 'borderless' sand/rock tile. Set to 0 if you want to pass through
-                default : col_map.push(0);
-            }
+            if(map[i] == 0) col_map.push(0);
+            else col_map.push(Game.Collider.spriteSheetCollisionValues[map[i]]);
+            // switch(map[i]){
+            //     case 44 : col_map.push(0); break;
+            //     //case 44:  window.location.href = 'GameOver.html';
+            //     case 45 : col_map.push(1); break;
+            //     case 57 : col_map.push(1); break;
+            //     case 69 : col_map.push(1); break;
+            //     case 81 : col_map.push(1); break;
+            //     case 92 : col_map.push(15); break;
+            //     case 93 : col_map.push(15); break;
+            //     case 104 : col_map.push(15); break;
+            //     case 105 : col_map.push(15); break;
+            //     case 103 : col_map.push(0); break;
+            //     case 115 : col_map.push(0); break;
+            //     case 116 : col_map.push(15); break;
+            //     case 117 : col_map.push(15); break;
+            //     case 129 : col_map.push(15); break;
+            //     case 133 : col_map.push(0); break; //this is the box, set to 15 if you want it to be solid
+            //     case 153 : col_map.push(15); break; //this is the 'borderless' sand/rock tile. Set to 0 if you want to pass through
+            //     default : col_map.push(0);
+            // }
         }
 
+        console.log("called " + col_map);
         return col_map;
     }
 
