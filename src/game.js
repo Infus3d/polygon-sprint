@@ -37,6 +37,8 @@ Game.World = class {
 
         this.difficulty = null;
         this.level = undefined;
+
+        this.gameOver = false;
     }
 
     setDifficulty(difficulty, level) {
@@ -94,9 +96,6 @@ Game.World = class {
     }
 
     update(){
-        this.player.updatePosition(this.gravity, this.friction);
-        this.collideObject(this.player);
-
         for(let i = this.doors.length-1; i >= 0; i--){
             let curDoor = this.doors[i];
             if(curDoor.collideObjectCenter(this.player))
@@ -124,16 +123,26 @@ Game.World = class {
 
         for(let i = this.flies.length-1; i >= 0; i--){
             let curFly = this.flies[i];
+            if(curFly.collideObject(this.player)){
+                this.gameOver = true;
+                return;
+            }
             curFly.updatePosition();
             curFly.animate();
         }
 
         for(let i = this.slimes.length-1; i >= 0; i--){
             let curSlime = this.slimes[i];
+            if(curSlime.collideObject(this.player)){
+                this.gameOver = true;
+                return;
+            }
             curSlime.updatePosition();
             curSlime.animate();
         }
 
+        this.player.updatePosition(this.gravity, this.friction);
+        this.collideObject(this.player);
         this.player.updateAnimation();
     }
 

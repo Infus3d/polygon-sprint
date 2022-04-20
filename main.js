@@ -5,6 +5,8 @@ window.addEventListener("load", function(event){
     if(difficulty == undefined) difficulty = "easy";
     let curLevel = levels[difficulty];
 
+    let bgImageName = curLevel.backgroundImage;
+
     class StuffManager {
         constructor(){
             this.tileSheetImage = undefined;
@@ -117,7 +119,8 @@ window.addEventListener("load", function(event){
 
         //checks if the player touches wate a.k.a loses
         let tileVal = game.world.getTileValue();
-        if(tileVal == 44 || tileVal == 115 || tileVal == 103){
+        if(tileVal == 44 || tileVal == 115 || tileVal == 103 || game.world.gameOver == true){
+            runner.stop();
             window.location.href = 'GameOver.html';
         }
 
@@ -149,7 +152,7 @@ window.addEventListener("load", function(event){
         stuffManager.tileSheet_columns = 12;
         stuffManager.tileSheet_spacing = 2;
     });
-    stuffManager.requestImage("img/backgroundImage.png", (image) => {
+    stuffManager.requestImage("img/" + bgImageName, (image) => {
         stuffManager.backgroundImage = image;
     });
 
