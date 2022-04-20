@@ -150,22 +150,13 @@ let levels = {
             "id" : "01",
             "doors" : [
                 {
-                    "tile_x" : -1,
-                    "tile_y" : 0,
-                    "width"  : 32,
-                    "height" : 64,
+                    "tile_x" : 3,
+                    "tile_y" : -1,
+                    "width"  : 768,
+                    "height" : 32,
                     "destination_room" : "02",
-                    "destination_tile_x" : 29,
-                    "destination_tile_y" : 17
-                },
-                {
-                    "tile_x" : 30,
-                    "tile_y" : 0,
-                    "width" : 32,
-                    "height" : 960,
-                    "destination_room" : "03",
-                    "destination_tile_x" : 0,
-                    "destination_tile_y" : -69
+                    "destination_tile_x" : -69,
+                    "destination_tile_y" : 19
                 }
             ],
             "coins" : [],
@@ -181,7 +172,7 @@ let levels = {
                 155, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 155,
                 155, 0, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 88, 88, 76, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 0, 155,
                 155, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 155,
-                155, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 155,
+                155, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 0, 0, 0, 0, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 155,
                 155, 0, 0, 0, 0, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 0, 0, 0, 0, 155,
                 155, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 155,
                 155, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 135, 135, 135, 135, 135, 135, 136, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 155,
@@ -197,20 +188,29 @@ let levels = {
             "id" : "02",
             "doors" : [
                 {
+                    "tile_x" : 3,
+                    "tile_y" : 20,
+                    "width"  : 768,
+                    "height" : 32,
+                    "destination_room" : "01",
+                    "destination_tile_x" : -69,
+                    "destination_tile_y" : 0
+                },
+                {
                     "tile_x" : -1,
                     "tile_y" : 0,
-                    "width"  : 32,
+                    "width" : 32,
                     "height" : 64,
-                    "destination_room" : "02",
+                    "destination_room" : "03",
                     "destination_tile_x" : 29,
-                    "destination_tile_y" : 17
+                    "destination_tile_y" : -69
                 },
                 {
                     "tile_x" : 30,
                     "tile_y" : 0,
                     "width" : 32,
-                    "height" : 960,
-                    "destination_room" : "03",
+                    "height" : 64,
+                    "destination_room" : "04",
                     "destination_tile_x" : 0,
                     "destination_tile_y" : -69
                 }
@@ -244,20 +244,11 @@ let levels = {
             "id" : "03",
             "doors" : [
                 {
-                    "tile_x" : -1,
+                    "tile_x" : 30,
                     "tile_y" : 0,
                     "width"  : 32,
                     "height" : 64,
                     "destination_room" : "02",
-                    "destination_tile_x" : 29,
-                    "destination_tile_y" : 17
-                },
-                {
-                    "tile_x" : 30,
-                    "tile_y" : 0,
-                    "width" : 32,
-                    "height" : 960,
-                    "destination_room" : "03",
                     "destination_tile_x" : 0,
                     "destination_tile_y" : -69
                 }
@@ -297,15 +288,6 @@ let levels = {
                     "height" : 64,
                     "destination_room" : "02",
                     "destination_tile_x" : 29,
-                    "destination_tile_y" : 17
-                },
-                {
-                    "tile_x" : 30,
-                    "tile_y" : 0,
-                    "width" : 32,
-                    "height" : 960,
-                    "destination_room" : "03",
-                    "destination_tile_x" : 0,
                     "destination_tile_y" : -69
                 }
             ],

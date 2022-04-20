@@ -16,7 +16,7 @@ Game.World = class {
         this.rows = 20;
 
         this.tile_set = new Game.World.TileSet(32);
-        this.player = new Game.World.Player(40, 40);
+        this.player = new Game.World.Player(40, 300);
         this.collider = new Game.Collider();
 
         this.room_id = "01";
@@ -124,7 +124,7 @@ Game.World = class {
         // if(obj.getLeft() < 0) { obj.setLeft(0); obj.velocity_x = 0; }
         // if(obj.getRight() > this.width) { obj.setRight(this.width); obj.velocity_x = 0; }
         // if(obj.getTop() < 0) { obj.setTop(0); obj.velocity_y = 0; }
-        if(obj.getBottom() > this.height) { obj.setBottom(this.height); obj.velocity_y = 0; obj.jumping = false; }
+        // if(obj.getBottom() > this.height) { obj.setBottom(this.height); obj.velocity_y = 0; obj.jumping = false; }
 
 
         /**
@@ -308,8 +308,8 @@ Game.Collider = class {
                                          0, 0, 15, 1, 15, 15, 0, 15, 15, 15, 15, 15,
                                          0, 0, 15, 1, 15, 15, 0, 15, 15, 1, 15, 1,
                                          0, 15, 15, 15, 1, 15, 1, 15, 15, 15, 15, 0,
-                                         0, 15, 15, 15, 15, 15, 0, 15, 15, 15, 15, 0,
-                                         0, 1, 15, 15, 15, 0, 0, 15, 15, 15, 15, 0];
+                                         15, 15, 15, 15, 15, 15, 0, 15, 15, 15, 15, 0,
+                                         15, 1, 15, 15, 15, 0, 0, 15, 15, 15, 15, 0];
 
     // Need to find a better way to find the collision map, atm doing it manually :(
     static getCollisionMap(map){
