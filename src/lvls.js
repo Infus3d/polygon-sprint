@@ -156,7 +156,7 @@ let levels = {
         }                
     },
     "medium" : {
-        "backgroundImage" : "background_medium.png",
+        "backgroundImage" : "background_medium_darker.png",
         "01": {
             "id" : "01",
             "columns" : 30,
