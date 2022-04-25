@@ -384,3 +384,56 @@ let levels = {
     },
     "hard" : {}
 }
+
+let scoreBoard = {
+    "coin" : {
+        "x" : 768-743,
+        "y" : 672, 
+        "width" : 35, 
+        "height" : 40
+    },
+    "times" : {
+        "x" : 805-743,
+        "y" : 678, 
+        "width" : 30, 
+        "height" : 28
+    },
+    "firstDigit" : {
+        "x" : 840-743, 
+        "y" : 672, 
+        "width" : 32, 
+        "height" : 40
+    },
+    "seconDigit" : {
+        "x" : 872-743, 
+        "y" : 672, 
+        "width" : 32, 
+        "height" : 40
+    },
+    "keys" : [
+        {
+            "x" : 480,
+            "y" : 672,
+            "width" : 44,
+            "height" : 40
+        },
+        {
+            "x" : 544,
+            "y" : 672,
+            "width" : 44,
+            "height" : 40
+        },
+        {
+            "x" : 608,
+            "y" : 672,
+            "width" : 44,
+            "height" : 40
+        },
+        {
+            "x" : 672,
+            "y" : 672,
+            "width" : 44,
+            "height" : 40
+        }
+    ]
+}

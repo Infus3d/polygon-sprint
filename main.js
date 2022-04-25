@@ -22,14 +22,15 @@ window.addEventListener("load", function(event){
             this.keyImages = [];
 
             this.numberImages = [];
+            this.hudKeyImages = [];
         }
         
         //current count of loaded images
         static totalLoadCount = 0;
         
         //the threshold the counts need to reach before initiating the game with runner.start()
-        //1 background, 1 tilesheet, 12 player_right, 12 player_left, 8 coin images, 4 fly images, 4 slime images, 11 numbers
-        static loadThreshold = 2 + 12 + 12 + 8 + 4 + 4 + 11;
+        //1 background, 1 tilesheet, 12 player_right, 12 player_left, 8 coin images, 4 fly images, 4 slime images, 11 numbers, 4, keys, 8 hud keys
+        static loadThreshold = 2 + 12 + 12 + 8 + 4 + 4 + 11 + 4 + 8;
 
         /**
          * Used to load an image.
@@ -61,6 +62,7 @@ window.addEventListener("load", function(event){
             this.sortImageSet(this.slimeImages);
             this.sortImageSet(this.numberImages);
             this.sortImageSet(this.keyImages);
+            this.sortImageSet(this.hudKeyImages);
         }
         
         sortImageSet(images){
@@ -115,10 +117,17 @@ window.addEventListener("load", function(event){
 
         /** Drawing Scoreboard begin ***/
         display.drawScoreboard("Gainsboro");
-        display.drawObject(stuffManager.coinImages[0], -1, -1, -1, -1, 768-743, 672, 35, 40);
-        display.drawObject(stuffManager.numberImages[10], -1, -1, -1, -1, 805-743, 678, 30, 28);
-        display.drawObject(stuffManager.numberImages[Math.floor(game.world.coinCount/10)], -1, -1, -1, -1, 840-743, 672, 32, 40);
-        display.drawObject(stuffManager.numberImages[game.world.coinCount % 10], -1, -1, -1, -1, 872-743, 672, 32, 40);
+
+        let s = scoreBoard;
+        display.drawObject(stuffManager.coinImages[0], -1, -1, -1, -1, s.coin.x, s.coin.y, s.coin.width, s.coin.height);
+        display.drawObject(stuffManager.numberImages[10], -1, -1, -1, -1, s.times.x, s.times.y, s.times.width, s.times.height);
+        display.drawObject(stuffManager.numberImages[Math.floor(game.world.coinCount/10)], -1, -1, -1, -1, s.firstDigit.x, s.firstDigit.y, s.firstDigit.width, s.firstDigit.height);
+        display.drawObject(stuffManager.numberImages[game.world.coinCount % 10], -1, -1, -1, -1, s.seconDigit.x, s.seconDigit.y, s.seconDigit.width, s.seconDigit.height);
+
+        for(let i=0; i<game.world.totalKeys; i++){
+            let curKeyStatus = game.world.keyStatus[i];
+            display.drawObject(stuffManager.hudKeyImages[i + 4*curKeyStatus], -1, -1, -1, -1, s.keys[i].x, s.keys[i].y, s.keys[i].width, s.keys[i].height);
+        }
         /** Drawing Scoreboard end ***/
 
         display.render();
@@ -201,7 +210,7 @@ window.addEventListener("load", function(event){
     }
 
     for(let i=0; i<=10; i++){
-        stuffManager.requestImage("img/hud/hud_" + ((i < 10) ? "0" : "") + i + ".png", (image) => {
+        stuffManager.requestImage("img/hud/num_hud/hud_" + ((i < 10) ? "0" : "") + i + ".png", (image) => {
             stuffManager.numberImages.push(image);
         });
     }
@@ -209,6 +218,12 @@ window.addEventListener("load", function(event){
     for(let i=0; i<4; i++){
         stuffManager.requestImage("img/keys/key0" + i + ".png", (image) => {
             stuffManager.keyImages.push(image);
+        });
+    }
+
+    for(let i=0; i<8; i++){
+        stuffManager.requestImage("img/hud/key_hud/hud_key0" + i + ".png", (image) => {
+            stuffManager.hudKeyImages.push(image);
         });
     }
     /*********************** Loading images end *********************/
