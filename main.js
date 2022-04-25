@@ -19,6 +19,8 @@ window.addEventListener("load", function(event){
             this.coinImages = [];
             this.flyImages = [];
             this.slimeImages = [];
+            this.keyImages = [];
+
             this.numberImages = [];
         }
         
@@ -58,6 +60,7 @@ window.addEventListener("load", function(event){
             this.sortImageSet(this.flyImages);
             this.sortImageSet(this.slimeImages);
             this.sortImageSet(this.numberImages);
+            this.sortImageSet(this.keyImages);
         }
         
         sortImageSet(images){
@@ -87,10 +90,15 @@ window.addEventListener("load", function(event){
              game.world.map, game.world.columns, game.world.tile_set.tile_size);
         // display.drawScoreboard("black", 0, 0);
         // display.drawPlayer(game.world.player, game.world.player.color);
+        
+        for(let i = game.world.keys.length-1; i >= 0; i--){
+            let key = game.world.keys[i];
+            display.drawObject(stuffManager.keyImages[key.keyNumber], -1, -1, -1, -1, key.x, key.y, key.width, key.height);
+        }
 
         for(let i = game.world.coins.length-1; i >= 0; i--){
             let coin = game.world.coins[i];
-            display.drawObject(stuffManager.coinImages[coin.frame_value], -1, -1, -1, -1, coin.x, coin.y, 30, 32);
+            display.drawObject(stuffManager.coinImages[coin.frame_value], -1, -1, -1, -1, coin.x, coin.y, coin.width, coin.height);
         }
 
         for(let i = game.world.flies.length-1; i >= 0; i--){
@@ -105,12 +113,13 @@ window.addEventListener("load", function(event){
 
         display.drawObject(stuffManager.playerImages[game.world.player.frame_value], -1, -1, -1, -1, game.world.player.x, game.world.player.y, 40, 54);
 
-        /** Drawing Scoreboard ***/
+        /** Drawing Scoreboard begin ***/
         display.drawScoreboard("Gainsboro");
         display.drawObject(stuffManager.coinImages[0], -1, -1, -1, -1, 768-743, 672, 35, 40);
         display.drawObject(stuffManager.numberImages[10], -1, -1, -1, -1, 805-743, 678, 30, 28);
         display.drawObject(stuffManager.numberImages[Math.floor(game.world.coinCount/10)], -1, -1, -1, -1, 840-743, 672, 32, 40);
         display.drawObject(stuffManager.numberImages[game.world.coinCount % 10], -1, -1, -1, -1, 872-743, 672, 32, 40);
+        /** Drawing Scoreboard end ***/
 
         display.render();
     };
@@ -194,6 +203,12 @@ window.addEventListener("load", function(event){
     for(let i=0; i<=10; i++){
         stuffManager.requestImage("img/hud/hud_" + ((i < 10) ? "0" : "") + i + ".png", (image) => {
             stuffManager.numberImages.push(image);
+        });
+    }
+
+    for(let i=0; i<4; i++){
+        stuffManager.requestImage("img/keys/key0" + i + ".png", (image) => {
+            stuffManager.keyImages.push(image);
         });
     }
     /*********************** Loading images end *********************/

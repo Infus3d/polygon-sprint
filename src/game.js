@@ -34,6 +34,10 @@ Game.World = class {
         this.coins = [];
         this.coinCount = 0;
 
+        this.keys = [];
+        this.keyStatus = [];
+        this.totalKeys = 0;
+
         this.flies = [];
         this.slimes = [];
 
@@ -49,6 +53,10 @@ Game.World = class {
     setDifficulty(difficulty, level) {
         this.difficulty = difficulty;
         this.level = level;
+
+        this.totalKeys = level.keyCount;
+        for(let i=0; i<this.totalKeys; i++)
+            this.keyStatus[i] = 0;
     }
 
     setup(room){
@@ -56,6 +64,7 @@ Game.World = class {
         this.coins = [];
         this.flies = [];
         this.slimes = [];
+        this.keys = [];
 
         this.map = room.map;
         this.collision_map = Game.Collider.getCollisionMap(this.map);
@@ -68,6 +77,13 @@ Game.World = class {
             let colOffset = [];
             colOffset.left = 0, colOffset.right = 0, colOffset.top = 0, colOffset.bottom = 0;
             this.doors[i] = new Game.Door(curDoor, this.tile_set.tile_size, colOffset);
+        }
+
+        for(let i = room.keys.length-1; i >= 0; i--){
+            let curKey = room.keys[i];
+            let colOffset = [];
+            colOffset.left = 1, colOffset.right = 1, colOffset.top = 2, colOffset.bottom = 2;
+            this.keys.push(new Game.Key(curKey.x, curKey.y, curKey.keyNumber, colOffset));
         }
 
         for(let i = room.coins.length-1; i >= 0; i--){
@@ -113,6 +129,21 @@ Game.World = class {
             let curDoor = this.doors[i];
             if(curDoor.collideObjectCenter(this.player))
                 this.triggeredDoor = curDoor;
+        }
+
+        for(let i = this.keys.length-1; i >= 0; i--){
+            let curKey = this.keys[i];
+            if(curKey.collideObject(this.player)){
+                for(let j = this.level[this.room_id]['keys'].length-1; j >= 0; j--){
+                    let tempKey = this.level[this.room_id]['keys'][j];
+                    if(tempKey.x == curKey.x && tempKey.y == curKey.y){
+                        this.level[this.room_id]['keys'].splice(this.level[this.room_id]['keys'].indexOf(tempKey), 1);
+                        break;
+                    }
+                }
+                this.keys.splice(this.keys.indexOf(curKey), 1);
+                this.keyStatus[curKey.keyNumber] ^= 1;
+            }
         }
 
         for(let i = this.coins.length-1; i >= 0; i--){
@@ -472,6 +503,13 @@ Game.World.Object = class {
         this.destination_x = (door.destination_tile_x == -69) ? -1 : (door.destination_tile_x * tile_size); //if it's a special case (-69) we mark it as -1 since
         this.destination_y = (door.destination_tile_y == -69) ? -1 : (door.destination_tile_y * tile_size); //it's an impossible coordinate for a destination
         this.destination_room = door.destination_room;
+    }
+}
+
+Game.Key = class extends Game.World.Object {
+    constructor(x, y, keyNumber, collision_offset = undefined){
+        super(x, y, 50, 50, 0, collision_offset);
+        this.keyNumber = keyNumber;
     }
 }
 

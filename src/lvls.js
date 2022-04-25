@@ -1,11 +1,13 @@
 let levels = {
     "easy" : {
         "backgroundImage" : "background_easy.png",
+        "keyCount" : 0,
         "01": {
             "id" : "01",
             "columns" : 30,
             "rows" : 20,
-
+            
+            "keys" : [],
             "doors" : [
                 {
                     "tile_x" : -1,
@@ -61,6 +63,7 @@ let levels = {
             "columns" : 30,
             "rows" : 20,
 
+            "keys" : [],
             "doors" : [
                 {
                     "tile_x" : 30,
@@ -110,6 +113,7 @@ let levels = {
             "columns" : 30,
             "rows" : 20,
 
+            "keys" : [],
             "doors" : [
                 {
                     "tile_x" : -1,
@@ -157,11 +161,14 @@ let levels = {
     },
     "medium" : {
         "backgroundImage" : "background_medium_darker.png",
+        "keyCount" : 2,
         "01": {
             "id" : "01",
             "columns" : 30,
             "rows" : 20,
 
+            "keys" : [
+            ],
             "doors" : [
                 {
                     "tile_x" : 3,
@@ -223,6 +230,7 @@ let levels = {
             "columns" : 30,
             "rows" : 20,
 
+            "keys" : [],
             "doors" : [
                 {
                     "tile_x" : 3,
@@ -281,7 +289,14 @@ let levels = {
             "id" : "03",
             "columns" : 30,
             "rows" : 20,
-
+            
+            "keys" : [
+                {
+                    "keyNumber" : 1,
+                    "x" : 832,
+                    "y" : 512
+                }
+            ],
             "doors" : [
                 {
                     "tile_x" : 30,
@@ -323,6 +338,13 @@ let levels = {
             "columns" : 30,
             "rows" : 20,
 
+            "keys" : [
+                {
+                    "keyNumber" : 0,
+                    "x" : 878,
+                    "y" : 448,
+                }
+            ],
             "doors" : [
                 {
                     "tile_x" : -1,
