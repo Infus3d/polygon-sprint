@@ -15,6 +15,9 @@ Game.World = class {
         this.columns = 30;
         this.rows = 20;
 
+        this.score_columns = 30;
+        this.score_rows = 3;
+
         this.tile_set = new Game.World.TileSet(32);
         let colOffset = new Object();
         colOffset.left = 6, colOffset.right = 6, colOffset.top = 3, colOffset.bottom = 3;

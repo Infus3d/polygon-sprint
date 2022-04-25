@@ -2,6 +2,9 @@ class Display {
     constructor(canvas) {
         this.buffer = document.createElement("canvas").getContext("2d");
         this.context = canvas.getContext("2d");
+        this.scoreboard_height = 0;
+        this.scoreboard_width = 0;
+        this.tile_size = 32;
 
         this.drawMap = function(image, image_columns, image_tile_size, image_tile_spacing, map, map_columns, map_tile_size){
             for(let i = map.length-1; i >= 0; i--){
@@ -18,9 +21,15 @@ class Display {
             }
         };
 
-        this.drawPlayer = function (rectangle, color) {
+        this.drawRectangle = function (x, y, width, height, color) {
             this.buffer.fillStyle = color;
-            this.buffer.fillRect(Math.round(rectangle.x), Math.round(rectangle.y), rectangle.width, rectangle.height);
+            this.buffer.fillRect(Math.round(x), Math.round(y), width, height);
+        };
+
+        this.drawScoreboard = function (color, x = 0, y = 640) {
+            this.buffer.fillStyle = color;
+            this.buffer.fillRect(Math.round(x), Math.round(y), this.scoreboard_width, this.scoreboard_height);
+            this.buffer.strokeRect(Math.round(x), Math.round(y), this.scoreboard_width, this.scoreboard_height);
         };
 
         this.drawObject = function(image, src_x, src_y, src_w, src_h, dest_x, dest_y, dest_w, dest_h){
@@ -41,9 +50,12 @@ class Display {
         this.buffer.clearRect(0, 0, this.buffer.canvas.width, this.buffer.canvas.height);
         this.context.clearRect(0, 0, this.context.canvas.width, this.context.canvas.height);
     }
-    resize(width, height) {
+    resize(width, height, scoreboard_rows, tile_size) {
+        this.tile_size = tile_size;
+        this.scoreboard_height = scoreboard_rows * tile_size;
+        this.scoreboard_width = width;
         this.buffer.canvas.width = this.context.canvas.width = width;
-        this.buffer.canvas.height = this.context.canvas.height = height;
+        this.buffer.canvas.height = this.context.canvas.height = height + this.scoreboard_height;
     }
 
     getDisplayWidth() {

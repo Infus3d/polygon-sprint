@@ -19,14 +19,15 @@ window.addEventListener("load", function(event){
             this.coinImages = [];
             this.flyImages = [];
             this.slimeImages = [];
+            this.numberImages = [];
         }
         
         //current count of loaded images
         static totalLoadCount = 0;
         
         //the threshold the counts need to reach before initiating the game with runner.start()
-        //1 background, 1 tilesheet, 12 player_right, 12 player_left, 8 coin images, 4 fly images, 4 slime images
-        static loadThreshold = 2 + 12 + 12 + 8 + 4 + 4;
+        //1 background, 1 tilesheet, 12 player_right, 12 player_left, 8 coin images, 4 fly images, 4 slime images, 11 numbers
+        static loadThreshold = 2 + 12 + 12 + 8 + 4 + 4 + 11;
 
         /**
          * Used to load an image.
@@ -56,6 +57,7 @@ window.addEventListener("load", function(event){
             this.sortImageSet(this.coinImages);
             this.sortImageSet(this.flyImages);
             this.sortImageSet(this.slimeImages);
+            this.sortImageSet(this.numberImages);
         }
         
         sortImageSet(images){
@@ -83,6 +85,7 @@ window.addEventListener("load", function(event){
         display.drawBackground(stuffManager.backgroundImage);
         display.drawMap(stuffManager.tileSheetImage, stuffManager.tileSheet_columns, stuffManager.tileSheet_tile_size, stuffManager.tileSheet_spacing,
              game.world.map, game.world.columns, game.world.tile_set.tile_size);
+        // display.drawScoreboard("black", 0, 0);
         // display.drawPlayer(game.world.player, game.world.player.color);
 
         for(let i = game.world.coins.length-1; i >= 0; i--){
@@ -101,6 +104,14 @@ window.addEventListener("load", function(event){
         }
 
         display.drawObject(stuffManager.playerImages[game.world.player.frame_value], -1, -1, -1, -1, game.world.player.x, game.world.player.y, 40, 54);
+
+        /** Drawing Scoreboard ***/
+        display.drawScoreboard("Gainsboro");
+        display.drawObject(stuffManager.coinImages[0], -1, -1, -1, -1, 768-743, 672, 35, 40);
+        display.drawObject(stuffManager.numberImages[10], -1, -1, -1, -1, 805-743, 678, 30, 28);
+        display.drawObject(stuffManager.numberImages[Math.floor(game.world.coinCount/10)], -1, -1, -1, -1, 840-743, 672, 32, 40);
+        display.drawObject(stuffManager.numberImages[game.world.coinCount % 10], -1, -1, -1, -1, 872-743, 672, 32, 40);
+
         display.render();
     };
 
@@ -143,7 +154,7 @@ window.addEventListener("load", function(event){
 
     game.world.setDifficulty(difficulty, curLevel);
     game.world.setup(curLevel["01"]);
-    display.resize(game.world.width, game.world.height);
+    display.resize(game.world.width, game.world.height, game.world.score_rows, game.world.tile_set.tile_size);
 
     /********************* Loading images start **********************/
     stuffManager.requestImage("img/tiles_spritesheet.png", (image) => {
@@ -177,6 +188,12 @@ window.addEventListener("load", function(event){
     for(let i=1; i<=4; i++){
         stuffManager.requestImage("img/enemies/slime/slime0" + i + ".png", (image) => {
             stuffManager.slimeImages.push(image);
+        });
+    }
+
+    for(let i=0; i<=10; i++){
+        stuffManager.requestImage("img/hud/hud_" + ((i < 10) ? "0" : "") + i + ".png", (image) => {
+            stuffManager.numberImages.push(image);
         });
     }
     /*********************** Loading images end *********************/
