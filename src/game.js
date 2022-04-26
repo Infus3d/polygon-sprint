@@ -345,6 +345,8 @@ Game.Collider = class {
         let tile_top = tile_y;
         if(tile_value == 125) tile_top = tile_y + tile_size * 0.6;
         if (object.getBottom() > tile_top && object.getOldBottom() <= tile_top) {
+            document.getElementById("ppp").innerHTML = "collide Platform Bottom, tile value " + tile_value + " collision_value : " +
+                 Game.Collider.spriteSheetCollisionValues[tile_value];
             object.setBottom(tile_top - 1);
             object.velocity_y = 0;
             object.jumping    = false;
@@ -395,7 +397,7 @@ Game.Collider = class {
 
     static spriteSheetCollisionValues = [0, 0, 1, 15, 15, 15, 0, 0, 15, 15, 15, 15,
                                          0, 0, 1, 0, 15, 15, 0, 0, 15, 0, 15, 15,
-                                         0, 0, 1, 15, 15, 15, 15, 15, 0, 15, 0, 15, 15,
+                                         0, 0, 1, 15, 15, 15, 15, 0, 15, 0, 15, 15,
                                          0, 0, 15, 15, 0, 1, 15, 0, 1, 0, 1, 15,
                                          0, 15, 15, 15, 0, 1, 15, 15, 1, 0, 1, 15,
                                          0, 15, 15, 15, 0, 1, 15, 15, 1, 0, 1, 1,
@@ -410,9 +412,10 @@ Game.Collider = class {
     // Need to find a better way to find the collision map, atm doing it manually :(
     static getCollisionMap(map){
         let col_map = [];
+        // console.log("collisionValue[26] = " + Game.Collider.spriteSheetCollisionValues[26] + "collisionValue[41] " + Game.Collider.spriteSheetCollisionValues[41]);
         for(let i = 0; i < map.length; i++){
             if(map[i] == 0) col_map.push(0);
-            else col_map.push(Game.Collider.spriteSheetCollisionValues[map[i]]);
+            else col_map.push(Game.Collider.spriteSheetCollisionValues[map[i]-1]);
             // switch(map[i]){
             //     case 44 : col_map.push(0); break;
             //     //case 44:  window.location.href = 'GameOver.html';
