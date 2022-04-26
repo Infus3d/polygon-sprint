@@ -171,7 +171,7 @@ window.addEventListener("load", function(event){
     let runner = new Runner(1000 / 45, update, render);
 
     game.world.setDifficulty(difficulty, curLevel);
-    game.world.setup(curLevel["03"]);
+    game.world.setup(curLevel["01"]);
     display.resize(game.world.width, game.world.height, game.world.score_rows, game.world.tile_set.tile_size);
 
     /********************* Loading images start **********************/
