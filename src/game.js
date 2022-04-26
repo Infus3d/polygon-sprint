@@ -37,6 +37,8 @@ Game.World = class {
         this.keys = [];
         this.keyStatus = [];
         this.totalKeys = 0;
+        
+        this.lockTileId = [67, 98, 91, 55];
 
         this.flies = [];
         this.slimes = [];
@@ -141,6 +143,19 @@ Game.World = class {
                         break;
                     }
                 }
+                //Erasing locks from all rooms
+                for(let j = this.level.roomCount; j > 0; j--){
+                    let tempRoom = this.level[(j < 10 ? "0" : "") + j];
+                    for(let k = tempRoom.map.length-1; k >= 0; k--){
+                        if(tempRoom.map[k] == this.lockTileId[curKey.keyNumber])
+                            tempRoom.map[k] = 0;
+                    }
+                }
+                //Erasing locks from current room
+                for(let j = this.map.length-1; j >= 0; j--)
+                    if(this.map[j] == this.lockTileId[curKey.keyNumber])
+                        this.map[j] = 0;
+                
                 this.keys.splice(this.keys.indexOf(curKey), 1);
                 this.keyStatus[curKey.keyNumber] ^= 1;
             }
@@ -382,11 +397,11 @@ Game.Collider = class {
                                          0, 0, 1, 0, 15, 15, 0, 0, 15, 0, 15, 15,
                                          0, 0, 1, 15, 15, 15, 15, 15, 0, 15, 0, 15, 15,
                                          0, 0, 15, 15, 0, 1, 15, 0, 1, 0, 1, 15,
-                                         0, 15, 15, 15, 0, 1, 0, 15, 1, 0, 1, 15,
-                                         0, 15, 15, 15, 0, 1, 0, 15, 1, 0, 1, 1,
+                                         0, 15, 15, 15, 0, 1, 15, 15, 1, 0, 1, 15,
+                                         0, 15, 15, 15, 0, 1, 15, 15, 1, 0, 1, 1,
                                          0, 15, 15, 1, 0, 1, 0, 15, 1, 0, 1, 15,
+                                         0, 15, 15, 1, 15, 15, 15, 15, 15, 15, 15, 15,
                                          0, 15, 15, 1, 15, 15, 0, 15, 15, 15, 15, 15,
-                                         0, 0, 15, 1, 15, 15, 0, 15, 15, 15, 15, 15,
                                          0, 0, 15, 1, 15, 15, 0, 15, 15, 1, 15, 1,
                                          0, 15, 15, 15, 1, 15, 1, 15, 15, 15, 15, 0,
                                          15, 15, 15, 15, 15, 15, 0, 15, 15, 15, 15, 0,
