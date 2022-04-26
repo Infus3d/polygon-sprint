@@ -204,7 +204,7 @@ window.addEventListener("load", function(event){
     }
 
     for(let i=1; i<=4; i++){
-        stuffManager.requestImage("img/enemies/slime/slime0" + i + ".png", (image) => {
+        stuffManager.requestImage("img/enemies/slime/green_slime0" + i + ".png", (image) => {
             stuffManager.slimeImages.push(image);
         });
     }
