@@ -15,11 +15,13 @@ window.addEventListener("load", function(event){
             this.tileSheet_spacing = 2;
 
             this.backgroundImage = undefined;
+            this.winImage = undefined;
             this.playerImages = [];
             this.coinImages = [];
             this.flyImages = [];
             this.slimeImages = [];
             this.keyImages = [];
+            this.exitDoorImages = [];
 
             this.numberImages = [];
             this.hudKeyImages = [];
@@ -29,8 +31,9 @@ window.addEventListener("load", function(event){
         static totalLoadCount = 0;
         
         //the threshold the counts need to reach before initiating the game with runner.start()
-        //1 background, 1 tilesheet, 12 player_right, 12 player_left, 8 coin images, 4 fly images, 4 slime images, 11 numbers, 4, keys, 8 hud keys
-        static loadThreshold = 2 + 12 + 12 + 8 + 4 + 4 + 11 + 4 + 8;
+        //1 background, 1 tilesheet, 12 player_right, 12 player_left, 8 coin images, 4 fly images, 4 slime images, 11 numbers, 4, keys, 8 hud keys,
+        //4 exit Door images, 1 'you win' image
+        static loadThreshold = 2 + 12 + 12 + 8 + 4 + 4 + 11 + 4 + 8 + 4 + 1;
 
         /**
          * Used to load an image.
@@ -63,6 +66,7 @@ window.addEventListener("load", function(event){
             this.sortImageSet(this.numberImages);
             this.sortImageSet(this.keyImages);
             this.sortImageSet(this.hudKeyImages);
+            this.sortImageSet(this.exitDoorImages);
         }
         
         sortImageSet(images){
@@ -92,6 +96,12 @@ window.addEventListener("load", function(event){
              game.world.map, game.world.columns, game.world.tile_set.tile_size);
         // display.drawScoreboard("black", 0, 0);
         // display.drawPlayer(game.world.player, game.world.player.color);
+
+        if(game.world.exitDoor.visible){
+            let d = game.world.exitDoor;
+            display.drawObject(stuffManager.exitDoorImages[0 + 2*d.open], -1, -1, -1, -1, d.x, d.topHalfy, d.width, d.height / 2);
+            display.drawObject(stuffManager.exitDoorImages[1 + 2*d.open], -1, -1, -1, -1, d.x, d.botHalfy, d.width, d.height / 2);
+        }
         
         for(let i = game.world.keys.length-1; i >= 0; i--){
             let key = game.world.keys[i];
@@ -130,6 +140,9 @@ window.addEventListener("load", function(event){
         }
         /** Drawing Scoreboard end ***/
 
+        if(game.world.gameWon == true)
+            display.drawObject(stuffManager.winImage, -1, -1, -1, -1, 280, 120, 400, 400);
+
         display.render();
     };
 
@@ -146,11 +159,20 @@ window.addEventListener("load", function(event){
         }
         game.update();
 
+        // Game winning state, not sure what to do with it yet
+        // I just put up 'You Win!' image for now, can be changed
+        // to a page with 'buttons' for next action
+        if(game.world.gameWon == true){
+            runner.stop();
+            return;
+        }
+
         //checks if the player touches wate a.k.a loses
         let tileVal = game.world.getTileValue();
         if(tileVal == 44 || tileVal == 115 || tileVal == 103 || game.world.gameOver == true){
             runner.stop();
             window.location.href = 'GameOver.html';
+            return;
         }
 
         if(game.world.triggeredDoor != undefined){
@@ -183,6 +205,9 @@ window.addEventListener("load", function(event){
     });
     stuffManager.requestImage("img/" + bgImageName, (image) => {
         stuffManager.backgroundImage = image;
+    });
+    stuffManager.requestImage("img/youwin.png", (image) => {
+        stuffManager.winImage = image;
     });
 
     for(let i=1; i<=24; i++){
@@ -224,6 +249,12 @@ window.addEventListener("load", function(event){
     for(let i=0; i<8; i++){
         stuffManager.requestImage("img/hud/key_hud/hud_key0" + i + ".png", (image) => {
             stuffManager.hudKeyImages.push(image);
+        });
+    }
+
+    for(let i=0; i<4; i++){
+        stuffManager.requestImage("img/exit/exit0" + i + ".png", (image) => {
+            stuffManager.exitDoorImages.push(image);
         });
     }
     /*********************** Loading images end *********************/

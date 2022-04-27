@@ -20,9 +20,11 @@ Game.World = class {
 
         this.tile_set = new Game.World.TileSet(32);
         let colOffset = new Object();
+        this.collider = new Game.Collider();
+        
         colOffset.left = 6, colOffset.right = 6, colOffset.top = 3, colOffset.bottom = 3;
         this.player = new Game.World.Player(40, 300, colOffset);
-        this.collider = new Game.Collider();
+        this.exitDoor = undefined;
 
         this.room_id = "01";
         this.doors = [];
@@ -50,6 +52,7 @@ Game.World = class {
         this.level = undefined;
 
         this.gameOver = false;
+        this.gameWon = false;
     }
 
     setDifficulty(difficulty, level) {
@@ -59,6 +62,10 @@ Game.World = class {
         this.totalKeys = level.keyCount;
         for(let i=0; i<this.totalKeys; i++)
             this.keyStatus[i] = 0;
+        
+        let colOffset = new Object();
+        colOffset.left = 20, colOffset.right = 20, colOffset.top = 20, colOffset.bottom = 20;
+        this.exitDoor = new Game.Exit(level.exitDoor, colOffset);
     }
 
     setup(room){
@@ -73,6 +80,9 @@ Game.World = class {
         this.columns = room.columns;
         this.rows = room.rows;
         this.room_id = room.id;
+
+        if(room.id == this.exitDoor.roomID) this.exitDoor.visible = true;
+        else this.exitDoor.visible = false;
 
         for(let i = room.doors.length-1; i >= 0; i--){
             let curDoor = room.doors[i];
@@ -127,6 +137,11 @@ Game.World = class {
     }
 
     update(){
+        if(this.exitDoor.visible && this.exitDoor.open == 1 && this.exitDoor.collideObject(this.player)){
+            this.gameWon = true;
+            return;
+        }
+
         for(let i = this.doors.length-1; i >= 0; i--){
             let curDoor = this.doors[i];
             if(curDoor.collideObjectCenter(this.player))
@@ -158,6 +173,13 @@ Game.World = class {
                 
                 this.keys.splice(this.keys.indexOf(curKey), 1);
                 this.keyStatus[curKey.keyNumber] ^= 1;
+
+                let cnt = 0;
+                for(let j = this.totalKeys-1; j >= 0; j--)
+                    if(this.keyStatus[j] != undefined)
+                        cnt += this.keyStatus[j];
+                if(cnt == this.totalKeys) 
+                    this.exitDoor.open = 1;
             }
         }
 
@@ -528,6 +550,18 @@ Game.Key = class extends Game.World.Object {
     constructor(x, y, keyNumber, collision_offset = undefined){
         super(x, y, 50, 50, 0, collision_offset);
         this.keyNumber = keyNumber;
+    }
+}
+
+Game.Exit = class extends Game.World.Object {
+    constructor(exitdoor, collision_offset = undefined){
+        super(exitdoor.x, exitdoor.y, exitdoor.width, exitdoor.height, 0, collision_offset);
+        this.topHalfy = exitdoor.y;
+        this.botHalfy = exitdoor.y + (exitdoor.height / 2);
+        this.roomID = exitdoor.roomID;
+
+        this.open = 0;        //when the door is open, player can just enter and win the game
+        this.visible = false; //when the door is visible, it is present at current level
     }
 }
 
