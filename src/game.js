@@ -99,14 +99,14 @@ Game.World = class {
             let curFly = room.flies[i];
             let colOffset = [];
             colOffset.left = 15, colOffset.right = 15, colOffset.top = 4, colOffset.bottom = 2;
-            this.flies.push(new Game.Fly(curFly.start_x, curFly.start_y, curFly.end_x, curFly.end_y, colOffset));
+            this.flies.push(new Game.Fly(curFly.start_x, curFly.start_y, curFly.end_x, curFly.end_y, curFly.dx, curFly.dy, colOffset));
         }
 
         for(let i = room.slimes.length-1; i >= 0; i--){
             let curSlime = room.slimes[i];
             let colOffset = [];
             colOffset.left = 3, colOffset.right = 3, colOffset.top = 2, colOffset.bottom = 0;
-            this.slimes.push(new Game.Slime(curSlime.start_x, curSlime.start_y, curSlime.end_x, curSlime.end_y, colOffset));
+            this.slimes.push(new Game.Slime(curSlime.start_x, curSlime.start_y, curSlime.end_x, curSlime.end_y, curSlime.dx, curSlime.dy, colOffset));
         }
 
         //-1 is the reserved number -> it indicates that we should keep the position in that axis
@@ -671,23 +671,25 @@ Game.Coin = class extends Game.World.AnimatedObject{
 }
 
 Game.Fly = class extends Game.World.AnimatedObject{
-    constructor(start_x, start_y, end_x, end_y, collision_offset = undefined){
+    constructor(start_x, start_y, end_x, end_y, dx, dy, collision_offset = undefined){
         super(Game.Fly.frame_sets['fly-left'], 10, "loop", (start_x + end_x)/2, (start_y + end_y)/2, 62, 27, 31, collision_offset);
         this.start_x = start_x;
         this.start_y = start_y;
         this.end_x = end_x;
         this.end_y = end_y;
+        this.dx = dx;
+        this.dy = dy;
 
-        this.dx = Math.abs(end_x - start_x) / 2;
-        this.dy = Math.abs(end_y - start_y) / 2;
+        this.lenx = (end_x - start_x) / 2;
+        this.leny = (end_y - start_y) / 2;
 
         this.base_x = (start_x + end_x) / 2;
         this.base_y = (start_y + end_y) / 2;
 
         this.position_x = Math.random() * Math.PI;
-        this.position_y = Math.random() * Math.PI;
+        this.position_y = this.position_x;
 
-        this.direction_x = -1;
+        this.direction_x = -Math.sign(end_x - start_x);
     }
 
     static frame_sets = {
@@ -696,14 +698,14 @@ Game.Fly = class extends Game.World.AnimatedObject{
     }
 
     updatePosition(){
-        this.position_x += 0.03;
-        this.position_y += 0.03;
+        this.position_x += this.dx;
+        this.position_y += this.dy;
         
         this.old_x = this.x;
         this.old_y = this.y;
 
-        this.x = this.base_x + Math.cos(this.position_x) * this.dx;
-        this.y = this.base_y + Math.cos(this.position_y) * this.dy;
+        this.x = this.base_x + Math.cos(this.position_x) * this.lenx;
+        this.y = this.base_y + Math.cos(this.position_y) * this.leny;
 
         if(this.old_x < this.x && this.direction_x < 0){
             this.changeFrameSet(Game.Fly.frame_sets['fly-right'], "loop", 10);
@@ -717,17 +719,19 @@ Game.Fly = class extends Game.World.AnimatedObject{
 }
 
 Game.Slime = class extends Game.World.AnimatedObject{
-    constructor(start_x, start_y, end_x, end_y, collision_offset = undefined){
+    constructor(start_x, start_y, end_x, end_y, dx, dy, collision_offset = undefined){
         super(Game.Slime.frame_sets['slither-left'], 15, "loop", (start_x + end_x)/2, (start_y + end_y)/2, 51, 28, 31, collision_offset);
         this.start_x = start_x;
         this.start_y = start_y;
         this.end_x = end_x;
         this.end_y = end_y;
+        this.dx = dx;
+        this.dy = dy;
         this.offset_x = 0;
         this.offset_y = 5;
 
-        this.dx = Math.abs(end_x - start_x) / 2;
-        this.dy = Math.abs(end_y - start_y) / 2;
+        this.lenx = Math.abs(end_x - start_x) / 2;
+        this.leny = Math.abs(end_y - start_y) / 2;
 
         this.base_x = (start_x + end_x) / 2;
         this.base_y = (start_y + end_y) / 2;
@@ -744,14 +748,14 @@ Game.Slime = class extends Game.World.AnimatedObject{
     }
 
     updatePosition(){
-        this.position_x += 0.02;
-        this.position_y += 0.02;
+        this.position_x += this.dx;
+        this.position_y += this.dy;
         
         this.old_x = this.x;
         this.old_y = this.y;
 
-        this.x = this.base_x + Math.cos(this.position_x) * this.dx;
-        this.y = this.base_y + Math.cos(this.position_y) * this.dy;
+        this.x = this.base_x + Math.cos(this.position_x) * this.lenx;
+        this.y = this.base_y + Math.cos(this.position_y) * this.leny;
 
         if(this.old_x < this.x && this.direction_x < 0){
             this.changeFrameSet(Game.Slime.frame_sets['slither-right'], "loop", 15);
