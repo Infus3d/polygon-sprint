@@ -393,8 +393,8 @@ Game.Collider = class {
                 (object.getLeft() < tile_right && object.getOldLeft() >= tile_right) ||
                 (object.getTop() < tile_bottom && object.getOldTop() >= tile_bottom) || 
                 (object.getRight() > tile_left && object.getOldRight() <= tile_left)){
-                    object.decreaseLife();
-                    object.placeAt(this.spawn_x, this.spawn_y);
+                    if(object.decreaseLife())
+                        object.placeAt(this.spawn_x, this.spawn_y);
                     return true;
                 }
         }
@@ -413,8 +413,8 @@ Game.Collider = class {
             
             if(Game.Collider.deadlyTiles.indexOf(tile_value) != -1 && object.currentLives != undefined){
                 object.decreaseLife();
-                document.getElementById("ppp").innerHTML = "collide Platform Bottom, tile value " + tile_value + " collision_value : " +
-                 Game.Collider.spriteSheetCollisionValues[tile_value];
+                // document.getElementById("ppp").innerHTML = "collide Platform Bottom, tile value " + tile_value + " collision_value : " +
+                //  Game.Collider.spriteSheetCollisionValues[tile_value];
             }
 
             return true;
