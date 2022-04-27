@@ -22,6 +22,7 @@ window.addEventListener("load", function(event){
             this.slimeImages = [];
             this.keyImages = [];
             this.exitDoorImages = [];
+            this.heartImages = [];
 
             this.numberImages = [];
             this.hudKeyImages = [];
@@ -32,8 +33,8 @@ window.addEventListener("load", function(event){
         
         //the threshold the counts need to reach before initiating the game with runner.start()
         //1 background, 1 tilesheet, 12 player_right, 12 player_left, 8 coin images, 4 fly images, 4 slime images, 11 numbers, 4, keys, 8 hud keys,
-        //4 exit Door images, 1 'you win' image
-        static loadThreshold = 2 + 12 + 12 + 8 + 4 + 4 + 11 + 4 + 8 + 4 + 1;
+        //4 exit Door images, 1 'you win' image, 2 heart images
+        static loadThreshold = 2 + 12 + 12 + 8 + 4 + 4 + 11 + 4 + 8 + 4 + 1 + 2;
 
         /**
          * Used to load an image.
@@ -67,6 +68,7 @@ window.addEventListener("load", function(event){
             this.sortImageSet(this.keyImages);
             this.sortImageSet(this.hudKeyImages);
             this.sortImageSet(this.exitDoorImages);
+            this.sortImageSet(this.heartImages);
         }
         
         sortImageSet(images){
@@ -134,9 +136,15 @@ window.addEventListener("load", function(event){
         display.drawObject(stuffManager.numberImages[Math.floor(game.world.coinCount/10)], -1, -1, -1, -1, s.firstDigit.x, s.firstDigit.y, s.firstDigit.width, s.firstDigit.height);
         display.drawObject(stuffManager.numberImages[game.world.coinCount % 10], -1, -1, -1, -1, s.seconDigit.x, s.seconDigit.y, s.seconDigit.width, s.seconDigit.height);
 
+        for(let i=0; i<game.world.player.totalLives; i++){
+            display.drawObject(stuffManager.heartImages[(i < game.world.player.currentLives) ? 0 : 1], -1, -1, -1, -1, 
+                s.hearts[i].x, s.hearts[i].y, s.hearts[i].width, s.hearts[i].height);
+        }
+
         for(let i=0; i<game.world.totalKeys; i++){
             let curKeyStatus = game.world.keyStatus[i];
-            display.drawObject(stuffManager.hudKeyImages[i + 4*curKeyStatus], -1, -1, -1, -1, s.keys[i].x, s.keys[i].y, s.keys[i].width, s.keys[i].height);
+            display.drawObject(stuffManager.hudKeyImages[i + 4*curKeyStatus], -1, -1, -1, -1, 
+                s.keys[i].x, s.keys[i].y, s.keys[i].width, s.keys[i].height);
         }
         /** Drawing Scoreboard end ***/
 
@@ -168,8 +176,8 @@ window.addEventListener("load", function(event){
         }
 
         //checks if the player touches wate a.k.a loses
-        let tileVal = game.world.getTileValue();
-        if(tileVal == 44 || tileVal == 115 || tileVal == 103 || game.world.gameOver == true){
+        // let tileVal = game.world.getTileValue();
+        if(/**tileVal == 44 || tileVal == 115 || tileVal == 103 ||**/ game.world.gameOver == true){
             runner.stop();
             window.location.href = 'GameOver.html';
             return;
@@ -255,6 +263,12 @@ window.addEventListener("load", function(event){
     for(let i=0; i<4; i++){
         stuffManager.requestImage("img/exit/exit0" + i + ".png", (image) => {
             stuffManager.exitDoorImages.push(image);
+        });
+    }
+    
+    for(let i=0; i<2; i++){
+        stuffManager.requestImage("img/hud/heart_hud/hud_heart0" + i + ".png", (image) => {
+            stuffManager.heartImages.push(image);
         });
     }
     /*********************** Loading images end *********************/

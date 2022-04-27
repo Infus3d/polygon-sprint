@@ -3,6 +3,7 @@ let levels = {
         "backgroundImage" : "background_easy.png",
         "keyCount" : 1,
         "roomCount" : 3,
+        "lifeCount" : 3,
         "exitDoor" : {
             "roomID" : "01",
             "x" : 800,
@@ -14,6 +15,8 @@ let levels = {
             "id" : "01",
             "columns" : 30,
             "rows" : 20,
+            "spawn_x" : 40,
+            "spawn_y" : 300,
             
             "keys" : [],
             "doors" : [
@@ -70,6 +73,8 @@ let levels = {
             "id" : "02",
             "columns" : 30,
             "rows" : 20,
+            "spawn_x" : 896,
+            "spawn_y" : 480,
 
             "keys" : [],
             "doors" : [
@@ -93,7 +98,16 @@ let levels = {
                 [9, 13]
             ],
             "flies" : [],
-            "slimes" : [],
+            "slimes" : [
+                {
+                    "start_x" : 288,
+                    "start_y" : 320,
+                    "end_x" : 426,
+                    "end_y" : 320,
+                    "dx" : 0.02,
+                    "dy" : 0.02
+                }
+            ],
         
             "map" : [153, 0, 0, 0, 0, 67, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 153, 153,
                 153, 133, 0, 0, 0, 67, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 153, 153,
@@ -120,6 +134,8 @@ let levels = {
             "id" : "03",
             "columns" : 30,
             "rows" : 20,
+            "spawn_x" : 32,
+            "spawn_y" : 300,
 
             "keys" : [
                 {
@@ -177,6 +193,7 @@ let levels = {
         "backgroundImage" : "background_medium_darker.png",
         "keyCount" : 2,
         "roomCount" : 4,
+        "lifeCount" : 3,
         "exitDoor" : {
             "roomID" : "01",
             "x" : 448,
@@ -188,6 +205,8 @@ let levels = {
             "id" : "01",
             "columns" : 30,
             "rows" : 20,
+            "spawn_x" : 40,
+            "spawn_y" : 300,
 
             "keys" : [
             ],
@@ -264,6 +283,8 @@ let levels = {
             "id" : "02",
             "columns" : 30,
             "rows" : 20,
+            "spawn_x" : 448,
+            "spawn_y" : 512,
 
             "keys" : [],
             "doors" : [
@@ -350,6 +371,8 @@ let levels = {
             "id" : "03",
             "columns" : 30,
             "rows" : 20,
+            "spawn_x" : 896,
+            "spawn_y" : 0,
             
             "keys" : [
                 {
@@ -434,6 +457,8 @@ let levels = {
             "id" : "04",
             "columns" : 30,
             "rows" : 20,
+            "spawn_x" : 0,
+            "spawn_y" : 0,
 
             "keys" : [
                 {
@@ -515,50 +540,70 @@ let levels = {
 
 let scoreBoard = {
     "coin" : {
-        "x" : 768-743,
+        "x" : 412-32,
         "y" : 672, 
         "width" : 35, 
         "height" : 40
     },
     "times" : {
-        "x" : 805-743,
+        "x" : 449-32,
         "y" : 678, 
         "width" : 30, 
         "height" : 28
     },
     "firstDigit" : {
-        "x" : 840-743, 
+        "x" : 484-32, 
         "y" : 672, 
         "width" : 32, 
         "height" : 40
     },
     "seconDigit" : {
-        "x" : 872-743, 
+        "x" : 516-32, 
         "y" : 672, 
         "width" : 32, 
         "height" : 40
     },
+    "hearts" : [
+        {
+            "x" : 75,
+            "y" : 672,
+            "width" : 47,
+            "height" : 40
+        },
+        {
+            "x" : 152,
+            "y" : 672,
+            "width" : 47,
+            "height" : 40
+        },
+        {
+            "x" : 229,
+            "y" : 672,
+            "width" : 47,
+            "height" : 40
+        }
+    ],
     "keys" : [
         {
-            "x" : 480,
+            "x" : 612,
             "y" : 672,
             "width" : 44,
             "height" : 40
         },
         {
-            "x" : 544,
+            "x" : 676,
             "y" : 672,
             "width" : 44,
             "height" : 40
         },
         {
-            "x" : 608,
+            "x" : 740,
             "y" : 672,
             "width" : 44,
             "height" : 40
         },
         {
-            "x" : 672,
+            "x" : 804,
             "y" : 672,
             "width" : 44,
             "height" : 40

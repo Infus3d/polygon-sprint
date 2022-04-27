@@ -39,11 +39,14 @@ Game.World = class {
         this.keys = [];
         this.keyStatus = [];
         this.totalKeys = 0;
-        
+
         this.lockTileId = [67, 98, 91, 55];
 
         this.flies = [];
         this.slimes = [];
+
+        this.spawnX = 0;
+        this.spawnY = 0;
 
         this.width = this.tile_set.tile_size * this.columns;
         this.height = this.tile_set.tile_size * this.rows;
@@ -58,6 +61,9 @@ Game.World = class {
     setDifficulty(difficulty, level) {
         this.difficulty = difficulty;
         this.level = level;
+
+        this.player.totalLives = level.lifeCount;
+        this.player.currentLives = level.lifeCount;
 
         this.totalKeys = level.keyCount;
         for(let i=0; i<this.totalKeys; i++)
@@ -80,6 +86,9 @@ Game.World = class {
         this.columns = room.columns;
         this.rows = room.rows;
         this.room_id = room.id;
+        this.spawnX = room.spawn_x;
+        this.spawnY = room.spawn_y;
+        this.collider.setSpawnLocation(room.spawn_x, room.spawn_y);
 
         if(room.id == this.exitDoor.roomID) this.exitDoor.visible = true;
         else this.exitDoor.visible = false;
@@ -130,7 +139,7 @@ Game.World = class {
                 this.player.setCenterY(this.triggeredDoor.destination_y);
                 this.player.setOldCenterY(this.triggeredDoor.destination_y); //again important to reset both
             }
-            document.getElementById("ppp").innerHTML = "" + this.player.getTop() + " " + this.player.getLeft() + " | " + this.triggeredDoor.destination_x + " " + this.triggeredDoor.destination_y;
+            // document.getElementById("ppp").innerHTML = "" + this.player.getTop() + " " + this.player.getLeft() + " | " + this.triggeredDoor.destination_x + " " + this.triggeredDoor.destination_y;
 
             this.triggeredDoor = undefined;
         }
@@ -139,6 +148,10 @@ Game.World = class {
     update(){
         if(this.exitDoor.visible && this.exitDoor.open == 1 && this.exitDoor.collideObject(this.player)){
             this.gameWon = true;
+            return;
+        }
+        if(this.player.currentLives < 1){
+            this.gameOver = true;
             return;
         }
 
@@ -205,8 +218,12 @@ Game.World = class {
         for(let i = this.flies.length-1; i >= 0; i--){
             let curFly = this.flies[i];
             if(curFly.collideObject(this.player)){
-                this.gameOver = true;
-                return;
+                if(this.player.decreaseLife() == false){
+                    this.gameOver = true;
+                    return;
+                }
+                else
+                    this.player.placeAt(this.spawnX, this.spawnY);
             }
             curFly.updatePosition();
             curFly.animate();
@@ -215,8 +232,12 @@ Game.World = class {
         for(let i = this.slimes.length-1; i >= 0; i--){
             let curSlime = this.slimes[i];
             if(curSlime.collideObject(this.player)){
-                this.gameOver = true;
-                return;
+                if(this.player.decreaseLife() == false){
+                    this.gameOver = true;
+                    return;
+                }
+                else
+                    this.player.placeAt(this.spawnX, this.spawnY);
             }
             curSlime.updatePosition();
             curSlime.animate();
@@ -315,6 +336,7 @@ Game.World = class {
 
 Game.Collider = class {
     constructor(){
+        this.spawn_x = 40; this.spawn_y = 300; 
         this.routeCollision = function(tile_value, value, object, tile_x, tile_y, tile_size){
             
             switch(value) { // which value does our tile have?
@@ -358,20 +380,43 @@ Game.Collider = class {
                         if (this.collidePlatformLeft (tile_value, object, tile_x, tile_size)) return;
                         if (this.collidePlatformRight(tile_value, object, tile_x, tile_size)) return;
                         this.collidePlatformBottom   (tile_value, object, tile_y, tile_size); break;
-        
+                default: this.collidePlatform(tile_value, object, tile_x, tile_y, tile_size);
             }
         };
+    }
+
+    collidePlatform(tile_value, object, tile_x, tile_y, tile_size){
+        let tile_top = tile_y, tile_bottom = tile_y + tile_size;
+        let tile_left = tile_x, tile_right = tile_x + tile_size;
+        if(Game.Collider.deadlyTiles.indexOf(tile_value) != -1 && object.currentLives != undefined){
+            if ((object.getBottom() > tile_top && object.getOldBottom() <= tile_top) ||
+                (object.getLeft() < tile_right && object.getOldLeft() >= tile_right) ||
+                (object.getTop() < tile_bottom && object.getOldTop() >= tile_bottom) || 
+                (object.getRight() > tile_left && object.getOldRight() <= tile_left)){
+                    object.decreaseLife();
+                    object.placeAt(this.spawn_x, this.spawn_y);
+                    return true;
+                }
+        }
+        return false;
     }
     
     collidePlatformTop(tile_value, object, tile_y, tile_size) {
         let tile_top = tile_y;
         if(tile_value == 125) tile_top = tile_y + tile_size * 0.6;
         if (object.getBottom() > tile_top && object.getOldBottom() <= tile_top) {
-            document.getElementById("ppp").innerHTML = "collide Platform Bottom, tile value " + tile_value + " collision_value : " +
-                 Game.Collider.spriteSheetCollisionValues[tile_value];
+            // document.getElementById("ppp").innerHTML = "collide Platform Bottom, tile value " + tile_value + " collision_value : " +
+            //      Game.Collider.spriteSheetCollisionValues[tile_value];
             object.setBottom(tile_top - 1);
             object.velocity_y = 0;
             object.jumping    = false;
+            
+            if(Game.Collider.deadlyTiles.indexOf(tile_value) != -1 && object.currentLives != undefined){
+                object.decreaseLife();
+                document.getElementById("ppp").innerHTML = "collide Platform Bottom, tile value " + tile_value + " collision_value : " +
+                 Game.Collider.spriteSheetCollisionValues[tile_value];
+            }
+
             return true;
         } 
         return false;
@@ -383,10 +428,13 @@ Game.Collider = class {
     
           object.setLeft(tile_right);
           object.velocity_x = 0;
+
+          if(Game.Collider.deadlyTiles.indexOf(tile_value) != -1 && object.currentLives != undefined)
+                object.decreaseLife();
+            
           return true;
-    
-        } return false;
-    
+        } 
+        return false;
     }
     
     collidePlatformBottom(tile_value, object, tile_y, tile_size) {
@@ -399,22 +447,28 @@ Game.Collider = class {
           object.setTop(tile_bottom);// Move the top of the object to the bottom of the tile.
           object.velocity_y = 0;     // Stop moving in that direction.
           object.jumping = false;
+            
+          if(Game.Collider.deadlyTiles.indexOf(tile_value) != -1 && object.currentLives != undefined)
+                object.decreaseLife();
+
           return true;               // Return true because there was a collision.
-    
-        } return false;              // Return false if there was no collision.
-    
+        } 
+        return false;              // Return false if there was no collision.
     }
 
     collidePlatformLeft(tile_value, object, tile_x, tile_size) {
         let tile_left = tile_x;
         if (object.getRight() > tile_left && object.getOldRight() <= tile_left) {
-            document.getElementById("ppp").innerHTML = "collidePlatformLeft " + object.getRight() + " | " + tile_left + " | " + object.getOldRight(); 
+            // document.getElementById("ppp").innerHTML = "collidePlatformLeft " + object.getRight() + " | " + tile_left + " | " + object.getOldRight(); 
           object.setRight(tile_left - 1); // -0.01 is to fix a small problem with rounding, I think -1 also works, and is a lot more convenient but need to test
           object.velocity_x = 0;
+
+          if(Game.Collider.deadlyTiles.indexOf(tile_value) != -1 && object.currentLives != undefined)
+                object.decreaseLife();
+
           return true;
-    
-        } return false;
-    
+        } 
+        return false;
     }
 
     static spriteSheetCollisionValues = [0, 0, 1, 15, 15, 15, 0, 0, 15, 15, 15, 15,
@@ -430,6 +484,8 @@ Game.Collider = class {
                                          0, 15, 15, 15, 1, 15, 1, 15, 15, 15, 15, 0,
                                          15, 15, 15, 15, 15, 15, 0, 15, 15, 15, 15, 0,
                                          15, 1, 15, 15, 15, 0, 0, 15, 15, 15, 15, 0];
+    
+    static deadlyTiles = [8, 44, 103, 115, 139, 151];
 
     // Need to find a better way to find the collision map, atm doing it manually :(
     static getCollisionMap(map){
@@ -438,26 +494,6 @@ Game.Collider = class {
         for(let i = 0; i < map.length; i++){
             if(map[i] == 0) col_map.push(0);
             else col_map.push(Game.Collider.spriteSheetCollisionValues[map[i]-1]);
-            // switch(map[i]){
-            //     case 44 : col_map.push(0); break;
-            //     //case 44:  window.location.href = 'GameOver.html';
-            //     case 45 : col_map.push(1); break;
-            //     case 57 : col_map.push(1); break;
-            //     case 69 : col_map.push(1); break;
-            //     case 81 : col_map.push(1); break;
-            //     case 92 : col_map.push(15); break;
-            //     case 93 : col_map.push(15); break;
-            //     case 104 : col_map.push(15); break;
-            //     case 105 : col_map.push(15); break;
-            //     case 103 : col_map.push(0); break;
-            //     case 115 : col_map.push(0); break;
-            //     case 116 : col_map.push(15); break;
-            //     case 117 : col_map.push(15); break;
-            //     case 129 : col_map.push(15); break;
-            //     case 133 : col_map.push(0); break; //this is the box, set to 15 if you want it to be solid
-            //     case 153 : col_map.push(15); break; //this is the 'borderless' sand/rock tile. Set to 0 if you want to pass through
-            //     default : col_map.push(0);
-            // }
         }
         return col_map;
     }
@@ -465,6 +501,11 @@ Game.Collider = class {
     setMap(newMap) {
         //generate new map eventually
         this.map = newMap;
+    }
+
+    setSpawnLocation(x, y){
+        this.spawn_x = x;
+        this.spawn_y = y;
     }
 }
 
@@ -620,6 +661,7 @@ Game.World.AnimatedObject = class extends Game.World.Object{
 Game.World.Player = class extends Game.World.AnimatedObject{
     constructor(x, y, collision_offset = undefined){
         super(Game.World.Player.frame_sets["idle-right"], 5, "loop", x, y, 35, 50, 31, collision_offset); //should be [width, height] = [40, 54] but setting it smaller makes it collide better
+        this.currentLives = this.totalLives = 3;
         this.jumping = true;
         this.color = "#000000";
         this.direction_x = 1;
@@ -632,6 +674,17 @@ Game.World.Player = class extends Game.World.AnimatedObject{
         "idle-right": [0],
         "jump-right": [11],
         "move-right": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    }
+
+    decreaseLife(){
+        this.currentLives--;
+        return (this.currentLives > 0);
+    }
+
+    placeAt(x, y){
+        this.x = this.old_x = x;
+        this.y = this.old_y = y;
+        this.velocity_x = this.velocity_y = 0;
     }
     
     jump(){
@@ -655,7 +708,7 @@ Game.World.Player = class extends Game.World.AnimatedObject{
     }
 
     velocity_check(velocity){
-        if(Math.abs(velocity) > this.v2elocity_max)
+        if(Math.abs(velocity) > this.velocity_max)
             velocity = this.velocity_max * Math.sign(velocity);
         return velocity;
     }
