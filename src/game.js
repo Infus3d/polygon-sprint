@@ -283,17 +283,42 @@ Game.World = class {
 
             We do this for all four corners of the object.
          */
+
+        top = Math.floor(obj.getTop() / this.tile_set.tile_size);
+        horMid = Math.floor((obj.getLeft() + obj.width * 0.5) / this.tile_set.tile_size);
+        collision_value = this.collision_map[top * this.columns + horMid];
+        tile_value = this.map[top * this.columns + horMid];
+        if(top >= 0) this.collider.routeCollision(tile_value, collision_value, obj, horMid * this.tile_set.tile_size, top * this.tile_set.tile_size, this.tile_set.tile_size);
+        
+        verMid = Math.floor((obj.getTop() + obj.height * 0.5) / this.tile_set.tile_size);
+        left = Math.floor(obj.getLeft() / this.tile_set.tile_size);
+        collision_value = this.collision_map[verMid * this.columns + left];
+        tile_value = this.map[verMid * this.columns + left];
+        if(left >= 0) this.collider.routeCollision(tile_value, collision_value, obj, left * this.tile_set.tile_size, verMid * this.tile_set.tile_size, this.tile_set.tile_size);
+
         top = Math.floor(obj.getTop() / this.tile_set.tile_size);  //this are actually just the
         left = Math.floor(obj.getLeft() / this.tile_set.tile_size); // [x, y] coordinates of the tile
         collision_value = this.collision_map[top * this.columns + left];
         tile_value = this.map[top * this.columns + left];
         if(top >= 0 && left >= 0) this.collider.routeCollision(tile_value, collision_value, obj, left * this.tile_set.tile_size, top * this.tile_set.tile_size, this.tile_set.tile_size);
 
+        verMid = Math.floor((obj.getTop() + obj.height * 0.5) / this.tile_set.tile_size);
+        right = Math.floor(obj.getRight() / this.tile_set.tile_size);
+        collision_value = this.collision_map[verMid * this.columns + right];
+        tile_value = this.map[verMid * this.columns + right];
+        if(right < this.columns) this.collider.routeCollision(tile_value, collision_value, obj, right * this.tile_set.tile_size, verMid * this.tile_set.tile_size, this.tile_set.tile_size);
+
         top = Math.floor(obj.getTop() / this.tile_set.tile_size);
         right = Math.floor(obj.getRight() / this.tile_set.tile_size);
         collision_value = this.collision_map[top * this.columns + right];
         tile_value = this.map[top * this.columns + right];
         if(top >= 0 && right < this.columns) this.collider.routeCollision(tile_value, collision_value, obj, right * this.tile_set.tile_size, top * this.tile_set.tile_size, this.tile_set.tile_size);
+
+        bottom = Math.floor(obj.getBottom() / this.tile_set.tile_size);
+        horMid = Math.floor((obj.getLeft() + obj.width * 0.5) / this.tile_set.tile_size);
+        collision_value = this.collision_map[bottom * this.columns + horMid];
+        tile_value = this.map[bottom * this.columns + horMid];
+        if(bottom < this.rows) this.collider.routeCollision(tile_value, collision_value, obj, horMid * this.tile_set.tile_size, bottom * this.tile_set.tile_size, this.tile_set.tile_size);
 
         bottom = Math.floor(obj.getBottom() / this.tile_set.tile_size);
         left = Math.floor(obj.getLeft() / this.tile_set.tile_size);
@@ -306,31 +331,6 @@ Game.World = class {
         collision_value = this.collision_map[bottom * this.columns + right];
         tile_value = this.map[bottom * this.columns + right];
         if(right < this.columns && bottom < this.rows) this.collider.routeCollision(tile_value, collision_value, obj, right * this.tile_set.tile_size, bottom * this.tile_set.tile_size, this.tile_set.tile_size);
-
-
-        top = Math.floor(obj.getTop() / this.tile_set.tile_size);
-        horMid = Math.floor((obj.getLeft() + obj.width * 0.5) / this.tile_set.tile_size);
-        collision_value = this.collision_map[top * this.columns + horMid];
-        tile_value = this.map[top * this.columns + horMid];
-        if(top >= 0) this.collider.routeCollision(tile_value, collision_value, obj, horMid * this.tile_set.tile_size, top * this.tile_set.tile_size, this.tile_set.tile_size);
-
-        bottom = Math.floor(obj.getBottom() / this.tile_set.tile_size);
-        horMid = Math.floor((obj.getLeft() + obj.width * 0.5) / this.tile_set.tile_size);
-        collision_value = this.collision_map[bottom * this.columns + horMid];
-        tile_value = this.map[bottom * this.columns + horMid];
-        if(bottom < this.rows) this.collider.routeCollision(tile_value, collision_value, obj, horMid * this.tile_set.tile_size, bottom * this.tile_set.tile_size, this.tile_set.tile_size);
-
-        verMid = Math.floor((obj.getTop() + obj.height * 0.5) / this.tile_set.tile_size);
-        left = Math.floor(obj.getLeft() / this.tile_set.tile_size);
-        collision_value = this.collision_map[verMid * this.columns + left];
-        tile_value = this.map[verMid * this.columns + left];
-        if(left >= 0) this.collider.routeCollision(tile_value, collision_value, obj, left * this.tile_set.tile_size, verMid * this.tile_set.tile_size, this.tile_set.tile_size);
-
-        verMid = Math.floor((obj.getTop() + obj.height * 0.5) / this.tile_set.tile_size);
-        right = Math.floor(obj.getRight() / this.tile_set.tile_size);
-        collision_value = this.collision_map[verMid * this.columns + right];
-        tile_value = this.map[verMid * this.columns + right];
-        if(right < this.columns) this.collider.routeCollision(tile_value, collision_value, obj, right * this.tile_set.tile_size, verMid * this.tile_set.tile_size, this.tile_set.tile_size);
     }
 }
 
@@ -386,15 +386,16 @@ Game.Collider = class {
     }
 
     collidePlatform(tile_value, object, tile_x, tile_y, tile_size){
-        let tile_top = tile_y, tile_bottom = tile_y + tile_size;
-        let tile_left = tile_x, tile_right = tile_x + tile_size;
+        let tile_top = tile_y, tile_bottom = tile_y + tile_size - 1;
+        let tile_left = tile_x, tile_right = tile_x + tile_size - 1;
         if(Game.Collider.deadlyTiles.indexOf(tile_value) != -1 && object.currentLives != undefined){
-            if ((object.getBottom() > tile_top && object.getOldBottom() <= tile_top) ||
+            if ((object.getCenterY() > tile_top && object.getOldCenterY() <= tile_top) ||
                 (object.getLeft() < tile_right && object.getOldLeft() >= tile_right) ||
-                (object.getTop() < tile_bottom && object.getOldTop() >= tile_bottom) || 
+                (object.getCenterY() < tile_bottom && object.getOldCenterY() >= tile_bottom) || 
                 (object.getRight() > tile_left && object.getOldRight() <= tile_left)){
                     if(object.decreaseLife())
                         object.placeAt(this.spawn_x, this.spawn_y);
+                    // console.log("" + tile_value + " " + tile_x + " " + tile_y + " " + tile_left + " " + tile_top + " " + tile_right + " " + tile_bottom);
                     return true;
                 }
         }
@@ -413,8 +414,6 @@ Game.Collider = class {
             
             if(Game.Collider.deadlyTiles.indexOf(tile_value) != -1 && object.currentLives != undefined){
                 object.decreaseLife();
-                // document.getElementById("ppp").innerHTML = "collide Platform Bottom, tile value " + tile_value + " collision_value : " +
-                //  Game.Collider.spriteSheetCollisionValues[tile_value];
             }
 
             return true;
