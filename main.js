@@ -154,7 +154,12 @@ window.addEventListener("load", function(event){
         display.render();
     };
 
+    var audio = new Audio('sounds/music/backgroundMusic.mp3');
+
     let update = function(){
+        if(!audio.paused){
+            audio.play();
+        }
         if (controller.left.active == true) {
             game.world.player.moveLeft();
         }
@@ -278,4 +283,9 @@ window.addEventListener("load", function(event){
 
     //Uncomment for testing
     //module.exports.StuffManager = StuffManager;
+
+    var audio = new Audio('sounds/music/backgroundMusic.mp3');
+    audio.play();
+
+
 });
