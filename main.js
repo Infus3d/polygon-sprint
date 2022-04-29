@@ -174,6 +174,11 @@ window.addEventListener("load", function(event){
             game.world.player.jump();
             controller.up.active = false;
         }
+        if(controller.pause.active == true) {
+            runner.stop();
+            window.location.href = 'PauseScreen.html';
+            return;
+        }
         game.update();
 
         // Game winning state, not sure what to do with it yet
