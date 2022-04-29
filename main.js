@@ -91,6 +91,7 @@ window.addEventListener("load", function(event){
         }
     }
 
+
     let render = function(){
         // display.clearCanvas();
         display.drawBackground(stuffManager.backgroundImage);
@@ -154,6 +155,11 @@ window.addEventListener("load", function(event){
         display.render();
     };
 
+    var audio = new Audio('sounds/music/backgroundMusic.mp3');
+    audio.load();
+    audio.loop;
+    audio.play();
+
     let update = function(){
         if (controller.left.active == true) {
             game.world.player.moveLeft();
@@ -162,6 +168,9 @@ window.addEventListener("load", function(event){
             game.world.player.moveRight();
         }
         if (controller.up.active == true) {
+            let jump = new Audio("sounds/soundEffects/jump.mp3");
+            jump.load();
+            jump.play();
             game.world.player.jump();
             controller.up.active = false;
         }
@@ -203,6 +212,7 @@ window.addEventListener("load", function(event){
     game.world.setDifficulty(difficulty, curLevel);
     game.world.setup(curLevel["01"]);
     display.resize(game.world.width, game.world.height, game.world.score_rows, game.world.tile_set.tile_size);
+
 
     /********************* Loading images start **********************/
     stuffManager.requestImage("img/tiles_spritesheet.png", (image) => {
