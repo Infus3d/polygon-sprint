@@ -8,7 +8,7 @@ class Game {
 }
 
 Game.World = class {
-    constructor(friction = 0.8, gravity = 2.4){
+    constructor(friction = 0.8, gravity = 2.45){
         this.friction = friction;
         this.gravity = gravity;
 
@@ -22,7 +22,7 @@ Game.World = class {
         let colOffset = new Object();
         this.collider = new Game.Collider();
         
-        colOffset.left = 6, colOffset.right = 6, colOffset.top = 3, colOffset.bottom = 3;
+        colOffset.left = 6, colOffset.right = 6, colOffset.top = 5, colOffset.bottom = 5;
         this.player = new Game.World.Player(40, 300, colOffset);
         this.exitDoor = undefined;
 
@@ -72,6 +72,7 @@ Game.World = class {
         let colOffset = new Object();
         colOffset.left = 20, colOffset.right = 20, colOffset.top = 20, colOffset.bottom = 20;
         this.exitDoor = new Game.Exit(level.exitDoor, colOffset);
+        this.player.placeAt(level["01"].spawn_x, level["01"].spawn_y);
     }
 
     setup(room){
@@ -103,7 +104,7 @@ Game.World = class {
         for(let i = room.keys.length-1; i >= 0; i--){
             let curKey = room.keys[i];
             let colOffset = [];
-            colOffset.left = 1, colOffset.right = 1, colOffset.top = 2, colOffset.bottom = 2;
+            colOffset.left = 1, colOffset.right = 1, colOffset.top = 20, colOffset.bottom = 20;
             this.keys.push(new Game.Key(curKey.x, curKey.y, curKey.keyNumber, colOffset));
         }
 
