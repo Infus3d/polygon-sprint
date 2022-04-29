@@ -146,6 +146,8 @@ Game.World = class {
     }
 
     update(){
+        let hit;
+        let coin;
         if(this.exitDoor.visible && this.exitDoor.open == 1 && this.exitDoor.collideObject(this.player)){
             this.gameWon = true;
             return;
@@ -209,7 +211,9 @@ Game.World = class {
                         break;
                     }
                 }
-
+                coin = new Audio("sounds/soundEffects/coin.mp3");
+                coin.load();
+                coin.play();
                 this.coins.splice(this.coins.indexOf(curCoin), 1);
                 this.coinCount++; //This is the coin score, need to do something with it
             }
@@ -224,6 +228,9 @@ Game.World = class {
                 }
                 else
                     this.player.placeAt(this.spawnX, this.spawnY);
+                hit = new Audio("sounds/soundEffects/hit.mp3");
+                hit.load();
+                hit.play();
             }
             curFly.updatePosition();
             curFly.animate();
@@ -238,6 +245,9 @@ Game.World = class {
                 }
                 else
                     this.player.placeAt(this.spawnX, this.spawnY);
+                hit = new Audio("sounds/soundEffects/hit.mp3");
+                hit.load();
+                hit.play();
             }
             curSlime.updatePosition();
             curSlime.animate();
@@ -393,9 +403,14 @@ Game.Collider = class {
                 (object.getLeft() < tile_right && object.getOldLeft() >= tile_right) ||
                 (object.getCenterY() < tile_bottom && object.getOldCenterY() >= tile_bottom) || 
                 (object.getRight() > tile_left && object.getOldRight() <= tile_left)){
-                    if(object.decreaseLife())
+                    if(object.decreaseLife()) {
                         object.placeAt(this.spawn_x, this.spawn_y);
+                        var hit = new Audio("sounds/soundEffects/hit.mp3");
+                        hit.load();
+                        hit.play();
+                    }
                     // console.log("" + tile_value + " " + tile_x + " " + tile_y + " " + tile_left + " " + tile_top + " " + tile_right + " " + tile_bottom);
+
                     return true;
                 }
         }
