@@ -187,6 +187,7 @@ Game.World = class {
                     if(this.map[j] == this.lockTileId[curKey.keyNumber])
                         this.map[j] = 0;
                 
+                this.collision_map = Game.Collider.getCollisionMap(this.map);
                 this.keys.splice(this.keys.indexOf(curKey), 1);
                 this.keyStatus[curKey.keyNumber] ^= 1;
 
