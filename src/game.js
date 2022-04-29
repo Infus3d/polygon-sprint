@@ -8,7 +8,7 @@ class Game {
 }
 
 Game.World = class {
-    constructor(friction = 0.8, gravity = 2){
+    constructor(friction = 0.8, gravity = 2.4){
         this.friction = friction;
         this.gravity = gravity;
 
@@ -511,7 +511,7 @@ Game.Collider = class {
 //Any object in this world is treated like a rectangle
 //with [x, y] top-left coordinates and [width, height] sizes
 Game.World.Object = class {
-    constructor(x = 0, y = 0, width = 0, height = 0, velocity_max = 25, collision_offset = undefined){
+    constructor(x = 0, y = 0, width = 0, height = 0, velocity_max = 28, collision_offset = undefined){
         this.x = x;
         this.y = y;
         this.old_x = x;
@@ -613,7 +613,7 @@ Game.Exit = class extends Game.World.Object {
  * mode for now has two states 'loop' (for animated states like moving) and 'pause' (for not animated states like standing idle)
  */
 Game.World.AnimatedObject = class extends Game.World.Object{
-    constructor(frame_set, delay, mode = "loop", x, y, width = 0, height = 0, velocity_max = 25, collision_offset = undefined){
+    constructor(frame_set, delay, mode = "loop", x, y, width = 0, height = 0, velocity_max = 28, collision_offset = undefined){
         super(x, y, width, height, velocity_max, collision_offset);
 
         this.counter = 0;
@@ -659,7 +659,7 @@ Game.World.AnimatedObject = class extends Game.World.Object{
 // update functin is called every time the canvas screen is updated
 Game.World.Player = class extends Game.World.AnimatedObject{
     constructor(x, y, collision_offset = undefined){
-        super(Game.World.Player.frame_sets["idle-right"], 2, "loop", x, y, 35, 50, 25, collision_offset); //should be [width, height] = [40, 54] but setting it smaller makes it collide better
+        super(Game.World.Player.frame_sets["idle-right"], 2, "loop", x, y, 35, 50, 28, collision_offset); //should be [width, height] = [40, 54] but setting it smaller makes it collide better
         this.currentLives = this.totalLives = 3;
         this.jumping = true;
         this.color = "#000000";
@@ -689,7 +689,7 @@ Game.World.Player = class extends Game.World.AnimatedObject{
     jump(){
         if(this.jumping == false){
             this.jumping = true;
-            this.velocity_y -= 25;
+            this.velocity_y -= 28;
             this.velocity_y = this.velocity_check(this.velocity_y);
         }
     }
@@ -746,7 +746,7 @@ Game.World.Player = class extends Game.World.AnimatedObject{
 
 Game.Coin = class extends Game.World.AnimatedObject{
     constructor(tile_x, tile_y, tile_size, collision_offset = undefined){
-        super(Game.Coin.frame_sets["coin-twirl"], 5, "loop", tile_x * tile_size, tile_y * tile_size, 30, 32, 25, collision_offset); //30 width, 32 height coins
+        super(Game.Coin.frame_sets["coin-twirl"], 5, "loop", tile_x * tile_size, tile_y * tile_size, 30, 32, 28, collision_offset); //30 width, 32 height coins
         this.tile_x = tile_x;
         this.tile_y = tile_y;
     }
@@ -758,7 +758,7 @@ Game.Coin = class extends Game.World.AnimatedObject{
 
 Game.Fly = class extends Game.World.AnimatedObject{
     constructor(start_x, start_y, end_x, end_y, dx, dy, collision_offset = undefined){
-        super(Game.Fly.frame_sets['fly-left'], 10, "loop", (start_x + end_x)/2, (start_y + end_y)/2, 62, 27, 25, collision_offset);
+        super(Game.Fly.frame_sets['fly-left'], 10, "loop", (start_x + end_x)/2, (start_y + end_y)/2, 62, 27, 28, collision_offset);
         this.start_x = start_x;
         this.start_y = start_y;
         this.end_x = end_x;
@@ -806,7 +806,7 @@ Game.Fly = class extends Game.World.AnimatedObject{
 
 Game.Slime = class extends Game.World.AnimatedObject{
     constructor(start_x, start_y, end_x, end_y, dx, dy, collision_offset = undefined){
-        super(Game.Slime.frame_sets['slither-left'], 15, "loop", (start_x + end_x)/2, (start_y + end_y)/2, 51, 28, 25, collision_offset);
+        super(Game.Slime.frame_sets['slither-left'], 15, "loop", (start_x + end_x)/2, (start_y + end_y)/2, 51, 28, 28, collision_offset);
         this.start_x = start_x;
         this.start_y = start_y;
         this.end_x = end_x;
