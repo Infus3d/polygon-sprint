@@ -8,7 +8,7 @@ class Game {
 }
 
 Game.World = class {
-    constructor(friction = 0.8, gravity = 2.45){
+    constructor(friction = 0.8, gravity = 2.40){
         this.friction = friction;
         this.gravity = gravity;
 
@@ -40,7 +40,7 @@ Game.World = class {
         this.keyStatus = [];
         this.totalKeys = 0;
 
-        this.lockTileId = [67, 98, 91, 55];
+        this.lockTileId = [67, 98, 91, 55, 38];
 
         this.flies = [];
         this.slimes = [];

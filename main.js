@@ -32,9 +32,9 @@ window.addEventListener("load", function(event){
         static totalLoadCount = 0;
         
         //the threshold the counts need to reach before initiating the game with runner.start()
-        //1 background, 1 tilesheet, 12 player_right, 12 player_left, 8 coin images, 4 fly images, 4 slime images, 11 numbers, 4, keys, 8 hud keys,
+        //1 background, 1 tilesheet, 12 player_right, 12 player_left, 8 coin images, 4 fly images, 4 slime images, 11 numbers, 4 keys, 8 hud keys,
         //4 exit Door images, 1 'you win' image, 2 heart images
-        static loadThreshold = 2 + 12 + 12 + 8 + 4 + 4 + 11 + 4 + 8 + 4 + 1 + 2;
+        static loadThreshold = 2 + 12 + 12 + 8 + 4 + 4 + 11 + 5 + 10 + 4 + 1 + 2;
 
         /**
          * Used to load an image.
@@ -143,7 +143,7 @@ window.addEventListener("load", function(event){
 
         for(let i=0; i<game.world.totalKeys; i++){
             let curKeyStatus = game.world.keyStatus[i];
-            display.drawObject(stuffManager.hudKeyImages[i + 4*curKeyStatus], -1, -1, -1, -1, 
+            display.drawObject(stuffManager.hudKeyImages[i + 5*curKeyStatus], -1, -1, -1, -1, 
                 s.keys[i].x, s.keys[i].y, s.keys[i].width, s.keys[i].height);
         }
         /** Drawing Scoreboard end ***/
@@ -248,13 +248,13 @@ window.addEventListener("load", function(event){
         });
     }
 
-    for(let i=0; i<4; i++){
+    for(let i=0; i<5; i++){
         stuffManager.requestImage("img/keys/key0" + i + ".png", (image) => {
             stuffManager.keyImages.push(image);
         });
     }
 
-    for(let i=0; i<8; i++){
+    for(let i=0; i<10; i++){
         stuffManager.requestImage("img/hud/key_hud/hud_key0" + i + ".png", (image) => {
             stuffManager.hudKeyImages.push(image);
         });
