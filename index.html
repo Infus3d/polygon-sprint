@@ -1,27 +1,52 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Project of Coms319</title>
-        <style>
-            #gameCanvas{
-                border: 1px solid black;
-            }
-            #statusCanvas{
-                border: 1px solid black;
-            }
-        </style>
-        <script src="src/lvls.js"></script>
-        <script src="src/controller.js"></script>
-        <script src="src/display.js"></script>
-        <script src="src/runner.js"></script>
-        <script src="src/game.js"></script>
-        <script src="main.js"></script>
-    </head>
-    <body>
-        <p align="center">
-            <canvas id="gameCanvas"></canvas>
-        </p>
-        <p id="ppp"></p>
-    </body>
+  <! this will be the startup screen for the game, it will display
+the background (yet to be designed) and have a title for the game,
+the User will be able to interact with the "Start Game button which will take them to
+the difficulty selection screen>
+
+<head>
+<! if a javascrpift file is needed it will be declared here>
+<style>
+  body {
+  background-image: url('img/backgroundImage.png');
+  }
+  .center_start_button
+  {
+     margin: 0;
+     position: absolute;
+     top: 50%;
+     left: 42%;
+    -ms-transform: translateY(-50%, -42%);
+    transform: translateY(-50%, -42%);
+  }
+  .scroll_image
+  {
+    background-image: url('img/backgroundImage.png');
+    height: 600px;
+    width: 1600px;
+    animation: slide 10s linear infinite;
+  }
+  .scroll_image_container{
+    overflow:  hidden;
+  }
+  @keyframes slide {
+    0% {
+      transform:  translate(0px);
+    }
+    100% {
+      transform:  translate(-200px);
+    }
+  }
+  p{text-align: center;}
+</style>
+</head>
+  <body>
+    <p style="font-size:72px">POLYGON SPRINT</p>
+    <audio id="song" src="sounds/music/crystals.mp3" autoplay="autoplay" loop="loop"></audio>
+  <div class="scroll_image">
+  </div>
+  <div class="center_start_button">
+    <a href="./DifficultySelectScreen.html"><button style="height:75px;width:200px" onclick=""> Start Game </button></a>
+  </div>
+</body>
 </html>
