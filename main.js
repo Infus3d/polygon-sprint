@@ -168,9 +168,9 @@ window.addEventListener("load", function(event){
             game.world.player.moveRight();
         }
         if (controller.up.active == true) {
-            let jump = new Audio("sounds/soundEffects/jump.mp3");
-            jump.load();
-            jump.play();
+            // let jump = new Audio("sounds/soundEffects/jump.mp3");
+            // jump.load();
+            // jump.play();
             game.world.player.jump();
             controller.up.active = false;
         }
