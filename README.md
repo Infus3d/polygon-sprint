@@ -5,7 +5,7 @@ Go to [this](https://infus3d.github.io/polygon-sprint/) link to play! Or simply 
 ![](./img/readme/move.png)
 
 ### Collect keys to open the locks of the mathing color
-![](./img/readme/key_locks.png)
+![](./img/readme/keys_locks.png)
 
 ### Beware of the enemies!
-![](./img/readme/enemies.png
+![](./img/readme/enemies.png)
