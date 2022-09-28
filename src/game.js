@@ -230,9 +230,9 @@ Game.World = class {
                 }
                 else
                     this.player.placeAt(this.spawnX, this.spawnY);
-                hit = new Audio("sounds/soundEffects/hit.mp3");
-                hit.load();
-                hit.play();
+//                 hit = new Audio("sounds/soundEffects/hit.mp3");
+//                 hit.load();
+//                 hit.play();
             }
             curFly.updatePosition();
             curFly.animate();
@@ -247,9 +247,9 @@ Game.World = class {
                 }
                 else
                     this.player.placeAt(this.spawnX, this.spawnY);
-                hit = new Audio("sounds/soundEffects/hit.mp3");
-                hit.load();
-                hit.play();
+//                 hit = new Audio("sounds/soundEffects/hit.mp3");
+//                 hit.load();
+//                 hit.play();
             }
             curSlime.updatePosition();
             curSlime.animate();
@@ -407,9 +407,9 @@ Game.Collider = class {
                 (object.getRight() > tile_left && object.getOldRight() <= tile_left)){
                     if(object.decreaseLife()) {
                         object.placeAt(this.spawn_x, this.spawn_y);
-                        var hit = new Audio("sounds/soundEffects/hit.mp3");
-                        hit.load();
-                        hit.play();
+//                         var hit = new Audio("sounds/soundEffects/hit.mp3");
+//                         hit.load();
+//                         hit.play();
                     }
                     // console.log("" + tile_value + " " + tile_x + " " + tile_y + " " + tile_left + " " + tile_top + " " + tile_right + " " + tile_bottom);
 
