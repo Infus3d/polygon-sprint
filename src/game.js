@@ -213,9 +213,9 @@ Game.World = class {
                         break;
                     }
                 }
-                coin = new Audio("sounds/soundEffects/coin.mp3");
-                coin.load();
-                coin.play();
+//                 coin = new Audio("sounds/soundEffects/coin.mp3");
+//                 coin.load();
+//                 coin.play();
                 this.coins.splice(this.coins.indexOf(curCoin), 1);
                 this.coinCount++; //This is the coin score, need to do something with it
             }
