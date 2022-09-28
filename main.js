@@ -155,11 +155,11 @@ window.addEventListener("load", function(event){
         display.render();
     };
 
-    var audio = new Audio('sounds/music/backgroundMusic.mp3');
-    audio.load();
-    audio.loop;
-    audio.volume = 0.1;
-    audio.play();
+//     var audio = new Audio('sounds/music/backgroundMusic.mp3');
+//     audio.load();
+//     audio.loop;
+//     audio.volume = 0.1;
+//     audio.play();
 
     let update = function(){
         if (controller.left.active == true) {
