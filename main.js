@@ -158,7 +158,7 @@ window.addEventListener("load", function(event){
     var audio = new Audio('sounds/music/backgroundMusic.mp3');
     audio.load();
     audio.loop;
-    audio.volume = 0.3;
+    audio.volume = 0.1;
     audio.play();
 
     let update = function(){
